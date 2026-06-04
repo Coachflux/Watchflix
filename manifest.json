@@ -1,0 +1,24 @@
+{
+  "name": "Cineflix",
+  "short_name": "Cineflix",
+  "description": "Watch movies and TV shows online",
+  "start_url": "/movie-app/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "portrait",
+  "scope": "/movie-app/",
+  "icons": [
+    {
+      "src": "assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["entertainment", "movies", "streaming"],
+  "lang": "en",
+  "dir": "ltr",
+  "related_applications": [],
+  "prefer_related_applications": false
+}
