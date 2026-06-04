@@ -1,0 +1,118 @@
+{
+  "genres": [
+    {
+      "id": 28,
+      "name": "Action",
+      "icon": "sword",
+      "description": "High-energy physical stunts, chases, battles, and destructive crises."
+    },
+    {
+      "id": 12,
+      "name": "Adventure",
+      "icon": "compass",
+      "description": "Hazardous or exciting experiences, searches, expeditions, and quests."
+    },
+    {
+      "id": 16,
+      "name": "Animation",
+      "icon": "film",
+      "description": "Wholly or partially animated films using any form of animation."
+    },
+    {
+      "id": 35,
+      "name": "Comedy",
+      "icon": "smile",
+      "description": "Events intended to make someone laugh, from droll to zany."
+    },
+    {
+      "id": 80,
+      "name": "Crime",
+      "icon": "shield",
+      "description": "Criminal justice system, moral gray areas, and law enforcement."
+    },
+    {
+      "id": 99,
+      "name": "Documentary",
+      "icon": "camera",
+      "description": "Real personages and events, stand-up comedy, and concert performances."
+    },
+    {
+      "id": 18,
+      "name": "Drama",
+      "icon": "heart",
+      "description": "Emotional narratives, character development, and serious themes."
+    },
+    {
+      "id": 10751,
+      "name": "Family",
+      "icon": "users",
+      "description": "Universally accepted viewing for younger audiences and children."
+    },
+    {
+      "id": 14,
+      "name": "Fantasy",
+      "icon": "sparkles",
+      "description": "Supernatural elements, magical worlds, and mythical creatures."
+    },
+    {
+      "id": 36,
+      "name": "History",
+      "icon": "landmark",
+      "description": "Historical events, biographies, and period pieces."
+    },
+    {
+      "id": 27,
+      "name": "Horror",
+      "icon": "ghost",
+      "description": "Terrifying or macabre events designed to evoke fear and suspense."
+    },
+    {
+      "id": 10402,
+      "name": "Music",
+      "icon": "music",
+      "description": "Musical performances, music-driven narratives, and concert films."
+    },
+    {
+      "id": 9648,
+      "name": "Mystery",
+      "icon": "search",
+      "description": "Puzzles, investigations, and uncovering hidden truths."
+    },
+    {
+      "id": 10749,
+      "name": "Romance",
+      "icon": "heart-handshake",
+      "description": "Love stories, relationship dynamics, and emotional connections."
+    },
+    {
+      "id": 878,
+      "name": "Science Fiction",
+      "icon": "rocket",
+      "description": "Futuristic concepts, advanced technology, and space exploration."
+    },
+    {
+      "id": 10770,
+      "name": "TV Movie",
+      "icon": "tv",
+      "description": "Feature-length films produced specifically for television broadcast."
+    },
+    {
+      "id": 53,
+      "name": "Thriller",
+      "icon": "alert-triangle",
+      "description": "Tension, suspense, and anticipation of a terrible event."
+    },
+    {
+      "id": 10752,
+      "name": "War",
+      "icon": "flag",
+      "description": "Military conflicts, battles, and the human cost of warfare."
+    },
+    {
+      "id": 37,
+      "name": "Western",
+      "icon": "sun",
+      "description": "American Old West, frontier life, and cowboy culture."
+    }
+  ]
+}
