@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="description" content="Cineflix - Stream movies and TV shows worldwide.">
+  <title>Cineflix</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+</head>
+<body class="dark">
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header">
+      <button class="btn-icon menu-btn" aria-label="Menu" id="menuBtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="logo">
+        <img src="assets/logo.svg" alt="Cineflix" class="logo-img">
+        <span class="logo-text">CINEFLIX</span>
+      </div>
+      <div class="header-actions">
+        <button class="btn-icon search-btn" aria-label="Search" id="searchBtn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button class="btn-icon profile-btn" aria-label="Profile" id="profileBtn">
+          <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="avatar">
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent"></main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottomNav">
+      <a href="#/" class="nav-item active" data-route="home">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span data-i18n="home">Home</span>
+      </a>
+      <a href="#/explore" class="nav-item" data-route="explore">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        <span data-i18n="explore">Explore</span>
+      </a>
+      <a href="#/downloads" class="nav-item" data-route="downloads">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span data-i18n="downloads">Downloads</span>
+      </a>
+      <a href="#/more" class="nav-item" data-route="more">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span data-i18n="more">More</span>
+      </a>
+    </nav>
+
+    <!-- Side Menu Overlay -->
+    <div class="side-menu-overlay" id="sideMenuOverlay"></div>
+    <aside class="side-menu" id="sideMenu">
+      <div class="side-menu-header">
+        <div class="logo">
+          <img src="assets/logo.svg" alt="Cineflix" class="logo-img">
+          <span class="logo-text">CINEFLIX</span>
+        </div>
+        <button class="btn-icon close-menu" id="closeMenu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="side-menu-body">
+        <div class="menu-section">
+          <h3 data-i18n="discover">Discover</h3>
+          <a href="#/" class="menu-link" data-route="home"><span class="menu-icon">🏠</span> <span data-i18n="home">Home</span></a>
+          <a href="#/explore" class="menu-link" data-route="explore"><span class="menu-icon">🧭</span> <span data-i18n="explore">Explore</span></a>
+          <a href="#/search" class="menu-link" data-route="search"><span class="menu-icon">🔍</span> <span data-i18n="search">Search</span></a>
+        </div>
+        <div class="menu-section">
+          <h3 data-i18n="library">Library</h3>
+          <a href="#/watchlist" class="menu-link" data-route="watchlist"><span class="menu-icon">🔖</span> <span data-i18n="watchlist">Watchlist</span></a>
+          <a href="#/downloads" class="menu-link" data-route="downloads"><span class="menu-icon">⬇️</span> <span data-i18n="downloads">Downloads</span></a>
+          <a href="#/history" class="menu-link" data-route="history"><span class="menu-icon">🕐</span> <span data-i18n="history">History</span></a>
+        </div>
+        <div class="menu-section">
+          <h3 data-i18n="settings">Settings</h3>
+          <a href="#/nations" class="menu-link" data-route="nations"><span class="menu-icon">🌍</span> <span data-i18n="nations">Nations &amp; Language</span></a>
+          <a href="#/settings" class="menu-link" data-route="settings"><span class="menu-icon">⚙️</span> <span data-i18n="settings">Settings</span></a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/home.js"></script>
+  <script src="js/discover.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/detail.js"></script>
+  <script src="js/tv.js"></script>
+  <script src="js/library.js"></script>
+  <script src="js/nations.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
