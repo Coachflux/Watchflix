@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIFA 2026 Rewards Hub | Watch. Predict. Earn. Win.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['Inter','sans-serif'], display: ['Oswald','sans-serif'] },
+      colors: { fifa: { blue:'#0047AB', dark:'#001B4D', gold:'#FFD700', accent:'#00D4FF' } },
+      animation: {
+        'pulse-glow':'pulse-glow 2s ease-in-out infinite',
+        'slide-up':'slide-up 0.5s ease-out',
+        'fade-in':'fade-in 0.3s ease-out',
+        'float':'float 3s ease-in-out infinite',
+      },
+      keyframes: {
+        'pulse-glow':{'0%,100%':{boxShadow:'0 0 20px rgba(0,212,255,0.3)'},'50%':{boxShadow:'0 0 40px rgba(0,212,255,0.6)'}},
+        'slide-up':{'0%':{transform:'translateY(20px)',opacity:'0'},'100%':{transform:'translateY(0)',opacity:'1'}},
+        'fade-in':{'0%':{opacity:'0'},'100%':{opacity:'1'}},
+        'float':{'0%,100%':{transform:'translateY(0)'},'50%':{transform:'translateY(-10px)'}},
+      }
+    }
+  }
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#000428 0%,#001B4D 30%,#0047AB 70%,#001B4D 100%);min-height:100vh;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden}
+.glass{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08)}
+.glass-strong{background:rgba(255,255,255,0.08);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid rgba(255,255,255,0.12)}
+.gold-gradient{background:linear-gradient(135deg,#FFD700 0%,#FFA500 50%,#FFD700 100%);background-size:200% 200%}
+.card-hover{transition:all 0.35s cubic-bezier(0.4,0,0.2,1)}
+.card-hover:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 25px 50px rgba(0,212,255,0.15),0 0 0 1px rgba(0,212,255,0.2)}
+.stadium-bg{background-image:radial-gradient(ellipse at 20% 50%,rgba(0,212,255,0.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(255,215,0,0.05) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(0,71,171,0.1) 0%,transparent 50%)}
+.live-indicator{animation:live-pulse 1.5s ease-in-out infinite}
+@keyframes live-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.3)}}
+.scrollbar-hide::-webkit-scrollbar{display:none}
+.scrollbar-hide{-ms-overflow-style:none;scrollbar-width:none}
+.tab-active{background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,71,171,0.2));border:1px solid rgba(0,212,255,0.35);color:#00D4FF}
+.reward-card{background:linear-gradient(145deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.08)}
+.tier-1{border-top:3px solid #CD7F32}
+.tier-2{border-top:3px solid #C0C0C0}
+.tier-3{border-top:3px solid #FFD700}
+.match-live{box-shadow:0 0 40px rgba(255,0,0,0.2),inset 0 0 60px rgba(255,0,0,0.05);border:1px solid rgba(255,50,50,0.4)}
+.notification-toast{animation:toast-in 0.4s cubic-bezier(0.16,1,0.3,1) forwards}
+@keyframes toast-in{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+.spin-wheel{transition:transform 4s cubic-bezier(0.17,0.67,0.12,0.99)}
+.prediction-correct{background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(34,197,94,0.03));border:1px solid rgba(34,197,94,0.3)}
+.prediction-wrong{background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.03));border:1px solid rgba(239,68,68,0.3)}
+.highlight-card{position:relative;overflow:hidden}
+.highlight-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(to top,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.3) 40%,transparent 70%);z-index:1}
+.streak-flame{animation:flame 0.6s ease-in-out infinite alternate}
+@keyframes flame{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.15) rotate(3deg)}}
+.modal-overlay{background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.leaderboard-row:nth-child(1){background:linear-gradient(90deg,rgba(255,215,0,0.12),transparent)}
+.leaderboard-row:nth-child(2){background:linear-gradient(90deg,rgba(192,192,192,0.08),transparent)}
+.leaderboard-row:nth-child(3){background:linear-gradient(90deg,rgba(205,127,50,0.08),transparent)}
+.input-field{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);transition:all 0.3s ease}
+.input-field:focus{background:rgba(255,255,255,0.08);border-color:rgba(0,212,255,0.5);box-shadow:0 0 20px rgba(0,212,255,0.1);outline:none}
+.btn-primary{background:linear-gradient(135deg,#0047AB,#00D4FF);transition:all 0.3s ease;position:relative;overflow:hidden}
+.btn-primary::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transition:left 0.5s ease}
+.btn-primary:hover::before{left:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,212,255,0.3)}
+.btn-gold{background:linear-gradient(135deg,#FFD700,#FF8C00);transition:all 0.3s ease}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,215,0,0.3)}
+.match-card-live{animation:borderPulse 2s ease-in-out infinite}
+@keyframes borderPulse{0%,100%{border-color:rgba(255,50,50,0.4)}50%{border-color:rgba(255,50,50,0.8)}}
+.progress-bar{transition:width 0.5s cubic-bezier(0.4,0,0.2,1)}
+.nav-item{position:relative}
+.nav-item::after{content:'';position:absolute;bottom:-4px;left:50%;width:0;height:2px;background:linear-gradient(90deg,#00D4FF,#FFD700);transition:all 0.3s ease;transform:translateX(-50%)}
+.nav-item:hover::after{width:80%}
+</style>
+</head>
+<body class="antialiased">
+
+<!-- AUTH MODAL -->
+<div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center modal-overlay">
+  <div class="glass-strong rounded-3xl p-8 max-w-md w-full mx-4 relative overflow-hidden">
+    <div class="absolute top-0 left-0 right-0 h-1 gold-gradient"></div>
+    <div class="absolute -top-20 -right-20 w-40 h-40 bg-fifa-gold/10 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-fifa-accent/10 rounded-full blur-3xl"></div>
+    <div class="text-center mb-8 relative z-10">
+      <div class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-fifa-blue via-fifa-accent to-fifa-gold flex items-center justify-center shadow-lg shadow-fifa-accent/20">
+        <i data-lucide="trophy" class="w-10 h-10 text-white"></i>
+      </div>
+      <h1 class="font-display text-3xl font-bold text-white mb-1 tracking-wide">FIFA 2026</h1>
+      <p class="text-fifa-gold font-bold tracking-[0.3em] text-xs uppercase">Rewards Hub</p>
+      <p class="text-gray-400 mt-3 text-sm">Watch. Predict. Earn. Win.</p>
+    </div>
+    <div id="authLoginForm" class="relative z-10">
+      <div class="space-y-4">
+        <div><label class="text-xs text-gray-400 uppercase tracking-wider font-medium mb-1.5 block">Email Address</label><input type="email" id="loginEmail" placeholder="you@example.com" class="input-field w-full px-4 py-3.5 rounded-xl text-white placeholder-gray-600 text-sm"></div>
+        <div><label class="text-xs text-gray-400 uppercase tracking-wider font-medium mb-1.5 block">Password</label><input type="password" id="loginPassword" placeholder="Enter your password" class="input-field w-full px-4 py-3.5 rounded-xl text-white placeholder-gray-600 text-sm"></div>
+        <div class="flex items-center justify-between text-sm"><label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="w-4 h-4 rounded border-white/20 bg-white/5 accent-fifa-accent"><span class="text-gray-400">Remember me</span></label><button onclick="showForgotPassword()" class="text-fifa-accent hover:text-fifa-gold transition-colors text-sm">Forgot password?</button></div>
+        <button onclick="login()" class="btn-primary w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide">Sign In</button>
+      </div>
+      <div class="relative my-6"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div><div class="relative flex justify-center text-xs"><span class="px-4 bg-[#0a1628] text-gray-500">or continue with</span></div></div>
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="socialLogin('google')" class="py-3 rounded-xl bg-white/5 border border-white/10 text-white flex items-center justify-center gap-2 hover:bg-white/10 transition-all text-sm font-medium"><svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#EA4335" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#4285F4" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Google</button>
+        <button onclick="socialLogin('apple')" class="py-3 rounded-xl bg-white/5 border border-white/10 text-white flex items-center justify-center gap-2 hover:bg-white/10 transition-all text-sm font-medium"><i data-lucide="apple" class="w-5 h-5"></i>Apple</button>
+      </div>
+      <button onclick="socialLogin('facebook')" class="w-full mt-3 py-3 rounded-xl bg-white/5 border border-white/10 text-white flex items-center justify-center gap-2 hover:bg-white/10 transition-all text-sm font-medium"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Continue with Facebook</button>
+      <button onclick="guestLogin()" class="w-full mt-3 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 flex items-center justify-center gap-2 hover:bg-white/10 hover:text-white transition-all text-sm font-medium"><i data-lucide="user" class="w-5 h-5"></i>Continue as Guest</button>
+      <p class="text-center mt-6 text-gray-500 text-sm">New to FIFA Rewards? <button onclick="toggleAuthMode()" class="text-fifa-accent hover:text-fifa-gold transition-colors font-semibold">Create Account</button></p>
+    </div>
+    <div id="authRegisterForm" class="hidden relative z-10">
+      <div class="space-y-4">
+        <div><label class="text-xs text-gray-400 uppercase tracking-wider font-medium mb-1.5 block">Full Name</label><input type="text" id="regName" placeholder="John Doe" class="input-field w-full px-4 py-3.5 rounded-xl text-white placeholder-gray-600 text-sm"></div>
+        <div><label class="text-xs text-gray-400 uppercase tracking-wider font-medium mb-1.5 block">Email Address</label><input type="email" id="regEmail" placeholder="you@example.com" class="input-field w-full px-4 py-3.5 rounded-xl text-white placeholder-gray-600 text-sm"></div>
+        <div><label class="text-xs text-gray-400 uppercase tracking-wider font-medium mb-1.5 block">Password</label><input type="password" id="regPassword" placeholder="Min 8 characters" class="input-field w-full px-4 py-3.5 rounded-xl text-white placeholder-gray-600 text-sm"></div>
+        <div><label class="text-xs text-gray-400 uppercase tracking-wider font-medium mb-1.5 block">Confirm Password</label><input type="password" id="regConfirm" placeholder="Repeat password" class="input-field w-full px-4 py-3.5 rounded-xl text-white placeholder-gray-600 text-sm"></div>
+        <div class="flex items-start gap-2"><input type="checkbox" id="regTerms" class="mt-1 w-4 h-4 rounded border-white/20 bg-white/5 accent-fifa-accent"><label for="regTerms" class="text-xs text-gray-400">I agree to the <a href="#" class="text-fifa-accent hover:underline">Terms of Service</a> and <a href="#" class="text-fifa-accent hover:underline">Privacy Policy</a></label></div>
+        <button onclick="register()" class="btn-primary w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide">Create Account</button>
+      </div>
+      <p class="text-center mt-6 text-gray-500 text-sm">Already have an account? <button onclick="toggleAuthMode()" class="text-fifa-accent hover:text-fifa-gold transition-colors font-semibold">Sign In</button></p>
+    </div>
+    <div id="authForgotForm" class="hidden relative z-10">
+      <div class="text-center mb-6"><div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-fifa-blue/20 flex items-center justify-center"><i data-lucide="key-round" class="w-7 h-7 text-fifa-accent"></i></div><h3 class="font-display text-xl font-bold text-white mb-1">Reset Password</h3><p class="text-gray-400 text-sm">Enter your email and we'll send you a reset link</p></div>
+      <div class="space-y-4"><input type="email" id="forgotEmail" placeholder="you@example.com" class="input-field w-full px-4 py-3.5 rounded-xl text-white placeholder-gray-600 text-sm"><button onclick="sendResetLink()" class="btn-primary w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide">Send Reset Link</button></div>
+      <p class="text-center mt-6 text-gray-500 text-sm"><button onclick="showLoginForm()" class="text-fifa-accent hover:text-fifa-gold transition-colors font-semibold flex items-center justify-center gap-1 mx-auto"><i data-lucide="arrow-left" class="w-4 h-4"></i>Back to Login</button></p>
+    </div>
+    <div id="authOtpForm" class="hidden relative z-10">
+      <div class="text-center mb-6"><div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-fifa-gold/20 flex items-center justify-center"><i data-lucide="shield-check" class="w-7 h-7 text-fifa-gold"></i></div><h3 class="font-display text-xl font-bold text-white mb-1">Verify Email</h3><p class="text-gray-400 text-sm">Enter the 6-digit code sent to your email</p></div>
+      <div class="flex gap-2 justify-center mb-6">
+        <input type="text" maxlength="1" class="otp-input w-12 h-14 text-center text-2xl font-bold rounded-xl input-field text-white" oninput="moveOtp(this,0)" onkeydown="moveOtpBack(event,0)">
+        <input type="text" maxlength="1" class="otp-input w-12 h-14 text-center text-2xl font-bold rounded-xl input-field text-white" oninput="moveOtp(this,1)" onkeydown="moveOtpBack(event,1)">
+        <input type="text" maxlength="1" class="otp-input w-12 h-14 text-center text-2xl font-bold rounded-xl input-field text-white" oninput="moveOtp(this,2)" onkeydown="moveOtpBack(event,2)">
+        <input type="text" maxlength="1" class="otp-input w-12 h-14 text-center text-2xl font-bold rounded-xl input-field text-white" oninput="moveOtp(this,3)" onkeydown="moveOtpBack(event,3)">
+        <input type="text" maxlength="1" class="otp-input w-12 h-14 text-center text-2xl font-bold rounded-xl input-field text-white" oninput="moveOtp(this,4)" onkeydown="moveOtpBack(event,4)">
+        <input type="text" maxlength="1" class="otp-input w-12 h-14 text-center text-2xl font-bold rounded-xl input-field text-white" oninput="moveOtp(this,5)" onkeydown="moveOtpBack(event,5)">
+      </div>
+      <button onclick="verifyOtp()" class="btn-gold w-full py-3.5 rounded-xl text-black font-bold text-sm tracking-wide">Verify & Continue</button>
+      <p class="text-center mt-4 text-gray-500 text-sm">Didn't receive code? <button onclick="resendOtp()" class="text-fifa-accent hover:text-fifa-gold transition-colors font-semibold">Resend</button></p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" class="hidden">
+
+<!-- Top Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-40 glass border-b border-white/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-fifa-blue via-fifa-accent to-fifa-gold flex items-center justify-center shadow-lg shadow-fifa-accent/20">
+          <i data-lucide="trophy" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h1 class="font-display text-xl font-bold text-white leading-tight tracking-wide">FIFA 2026</h1>
+          <p class="text-fifa-gold text-[10px] font-bold tracking-[0.25em] uppercase">Rewards Hub</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+          <i data-lucide="zap" class="w-4 h-4 text-fifa-gold"></i>
+          <span id="userPoints" class="font-bold text-fifa-gold">2,450</span>
+          <span class="text-gray-500 text-xs">pts</span>
+        </div>
+        <div class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+          <i data-lucide="flame" class="w-4 h-4 text-orange-500 streak-flame"></i>
+          <span id="userStreak" class="font-bold text-orange-400">5</span>
+          <span class="text-gray-500 text-xs">streak</span>
+        </div>
+        <button onclick="showNotifications()" class="relative p-2.5 rounded-xl hover:bg-white/10 transition-all">
+          <i data-lucide="bell" class="w-5 h-5 text-gray-300"></i>
+          <span id="notifBadge" class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
+        </button>
+        <button onclick="toggleProfileMenu()" id="profileBtn" class="flex items-center gap-2 p-1 pr-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all">
+          <div id="userAvatar" class="w-8 h-8 rounded-full bg-gradient-to-br from-fifa-blue to-fifa-accent flex items-center justify-center text-xs font-bold">JD</div>
+          <span id="userName" class="hidden sm:block text-sm font-medium">John Doe</span>
+          <i data-lucide="chevron-down" class="w-3 h-3 text-gray-500 hidden sm:block"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Profile Dropdown -->
+  <div id="profileDropdown" class="hidden absolute right-4 top-16 mt-2 w-64 glass-strong rounded-2xl p-2 border border-white/10 shadow-2xl z-50">
+    <div class="p-3 rounded-xl bg-white/5 mb-2">
+      <p id="profileName" class="font-semibold text-white text-sm">John Doe</p>
+      <p id="profileEmail" class="text-xs text-gray-400">john@example.com</p>
+    </div>
+    <button onclick="showProfileSettings()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 transition-colors text-sm text-gray-300"><i data-lucide="settings" class="w-4 h-4"></i>Settings</button>
+    <button onclick="showRedemptionHistory()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 transition-colors text-sm text-gray-300"><i data-lucide="history" class="w-4 h-4"></i>Redemption History</button>
+    <div class="border-t border-white/10 my-2"></div>
+    <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-500/10 transition-colors text-sm text-red-400"><i data-lucide="log-out" class="w-4 h-4"></i>Sign Out</button>
+  </div>
+</nav>
+
+<!-- Mobile Points Bar -->
+<div class="md:hidden fixed top-16 left-0 right-0 z-30 glass border-b border-white/10 px-4 py-2.5 flex justify-between items-center">
+  <div class="flex items-center gap-2"><i data-lucide="zap" class="w-4 h-4 text-fifa-gold"></i><span class="font-bold text-fifa-gold" id="mobilePoints">2,450 pts</span></div>
+  <div class="flex items-center gap-2"><i data-lucide="flame" class="w-4 h-4 text-orange-500"></i><span class="font-bold text-orange-400">5 day streak</span></div>
+</div>
+
+<!-- Main Content -->
+<main class="pt-28 md:pt-20 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+
+<!-- Hero Section -->
+<section class="mb-8 relative rounded-3xl overflow-hidden stadium-bg">
+  <div class="absolute inset-0 bg-gradient-to-r from-fifa-dark/90 via-fifa-blue/40 to-transparent z-10"></div>
+  <div class="absolute top-4 right-4 z-20">
+    <div class="px-4 py-2 rounded-full bg-fifa-gold/10 border border-fifa-gold/20 text-fifa-gold text-xs font-bold tracking-wider uppercase flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-fifa-gold animate-pulse"></span>June 11 - July 19, 2026
+    </div>
+  </div>
+  <div class="relative z-20 p-8 md:p-12">
+    <div class="max-w-2xl">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-fifa-gold/10 border border-fifa-gold/20 text-fifa-gold text-xs font-bold tracking-wider uppercase mb-5">
+        <i data-lucide="globe" class="w-3.5 h-3.5"></i>USA &bull; Canada &bull; Mexico
+      </div>
+      <h2 class="font-display text-5xl md:text-7xl font-bold text-white mb-5 leading-[0.95] tracking-tight">
+        Watch.<br>Predict.<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-fifa-gold via-orange-400 to-fifa-accent">Earn. Win.</span>
+      </h2>
+      <p class="text-gray-300 text-lg mb-8 max-w-lg leading-relaxed">Join millions of fans across 48 nations. Watch every match highlight, predict outcomes, earn points, and redeem exclusive FIFA World Cup 2026 rewards.</p>
+      <div class="flex flex-wrap gap-4">
+        <button onclick="switchTab('highlights')" class="btn-primary px-7 py-3.5 rounded-xl text-white font-bold text-sm tracking-wide flex items-center gap-2"><i data-lucide="play-circle" class="w-5 h-5"></i>Watch Highlights</button>
+        <button onclick="switchTab('predictions')" class="px-7 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white font-bold text-sm tracking-wide hover:bg-white/20 transition-all flex items-center gap-2"><i data-lucide="target" class="w-5 h-5"></i>Make Predictions</button>
+      </div>
+    </div>
+  </div>
+  <div class="absolute bottom-8 right-8 z-20 hidden lg:block">
+    <div class="w-32 h-32 rounded-full border-2 border-fifa-gold/20 flex items-center justify-center animate-float">
+      <div class="w-24 h-24 rounded-full border-2 border-fifa-accent/20 flex items-center justify-center">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-fifa-gold to-orange-500 flex items-center justify-center shadow-lg shadow-fifa-gold/30">
+          <i data-lucide="trophy" class="w-8 h-8 text-black"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Stats -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+  <div class="glass rounded-2xl p-5 card-hover">
+    <div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-fifa-blue/20 flex items-center justify-center"><i data-lucide="eye" class="w-5 h-5 text-fifa-accent"></i></div><span class="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Today</span></div>
+    <p class="text-2xl font-bold text-white">12</p><p class="text-xs text-gray-400 mt-0.5">Highlights Watched</p>
+  </div>
+  <div class="glass rounded-2xl p-5 card-hover">
+    <div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-green-500/15 flex items-center justify-center"><i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i></div><span class="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Accuracy</span></div>
+    <p class="text-2xl font-bold text-white">68%</p><p class="text-xs text-gray-400 mt-0.5">Prediction Win Rate</p>
+  </div>
+  <div class="glass rounded-2xl p-5 card-hover">
+    <div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-fifa-gold/15 flex items-center justify-center"><i data-lucide="users" class="w-5 h-5 text-fifa-gold"></i></div><span class="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Total</span></div>
+    <p class="text-2xl font-bold text-white">24</p><p class="text-xs text-gray-400 mt-0.5">Referrals</p>
+  </div>
+  <div class="glass rounded-2xl p-5 card-hover">
+    <div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl bg-purple-500/15 flex items-center justify-center"><i data-lucide="trophy" class="w-5 h-5 text-purple-400"></i></div><span class="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Global</span></div>
+    <p class="text-2xl font-bold text-white">#142</p><p class="text-xs text-gray-400 mt-0.5">Your Rank</p>
+  </div>
+</section>
+
+<!-- Live Matches -->
+<section id="live-matches" class="mb-8">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-3">
+      <div class="w-1 h-8 bg-red-500 rounded-full live-indicator"></div>
+      <h3 class="font-display text-2xl font-bold text-white">Live Matches</h3>
+      <span class="px-2.5 py-1 rounded-full bg-red-500/15 border border-red-500/20 text-red-400 text-xs font-bold">LIVE NOW</span>
+    </div>
+    <button class="text-fifa-accent text-sm font-semibold hover:text-fifa-gold transition-colors flex items-center gap-1">Match Center <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+  </div>
+  <div class="grid md:grid-cols-2 gap-4" id="liveMatchesContainer"></div>
+</section>
+
+<!-- Daily Login Rewards -->
+<section class="mb-8">
+  <div class="glass rounded-2xl p-6 relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-fifa-gold/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-64 h-64 bg-fifa-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+    <div class="relative z-10">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h3 class="font-display text-2xl font-bold text-white mb-1">Daily Login Rewards</h3>
+          <p class="text-gray-400 text-sm">Come back every day to earn bonus points and streak rewards</p>
+        </div>
+        <div class="flex items-center gap-2 px-4 py-2.5 rounded-full bg-orange-500/15 border border-orange-500/25">
+          <i data-lucide="flame" class="w-5 h-5 text-orange-500 streak-flame"></i>
+          <span class="font-bold text-orange-400 text-sm">5 Day Streak</span>
+        </div>
+      </div>
+      <div class="flex gap-3 overflow-x-auto scrollbar-hide pb-2" id="dailyRewardsContainer"></div>
+      <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-fifa-gold/10 via-orange-500/5 to-transparent border border-fifa-gold/15">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-fifa-gold/15 flex items-center justify-center border border-fifa-gold/20"><i data-lucide="gift" class="w-7 h-7 text-fifa-gold"></i></div>
+            <div>
+              <p class="font-bold text-white text-lg">Next Bonus: Day 7</p>
+              <p class="text-sm text-gray-400">500 Bonus Points + Mystery Reward</p>
+              <div class="flex items-center gap-2 mt-1.5">
+                <div class="w-24 h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-fifa-gold to-orange-500" style="width:71%"></div></div>
+                <span class="text-xs text-fifa-gold font-bold">5/7</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="claimDailyReward()" id="claimDailyBtn" class="btn-gold px-7 py-3.5 rounded-xl text-black font-bold text-sm tracking-wide">Claim Today</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Tabs -->
+<div class="flex gap-2 mb-6 overflow-x-auto scrollbar-hide pb-2" id="mainTabs">
+  <button onclick="switchTab('dashboard')" class="tab-btn tab-active px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all flex items-center gap-1.5" data-tab="dashboard"><i data-lucide="layout-dashboard" class="w-4 h-4"></i>Dashboard</button>
+  <button onclick="switchTab('highlights')" class="tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all text-gray-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5" data-tab="highlights"><i data-lucide="play" class="w-4 h-4"></i>Highlights</button>
+  <button onclick="switchTab('predictions')" class="tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all text-gray-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5" data-tab="predictions"><i data-lucide="target" class="w-4 h-4"></i>Predictions</button>
+  <button onclick="switchTab('rewards')" class="tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all text-gray-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5" data-tab="rewards"><i data-lucide="gift" class="w-4 h-4"></i>Rewards</button>
+  <button onclick="switchTab('leaderboard')" class="tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all text-gray-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5" data-tab="leaderboard"><i data-lucide="trophy" class="w-4 h-4"></i>Leaderboard</button>
+  <button onclick="switchTab('referrals')" class="tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all text-gray-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5" data-tab="referrals"><i data-lucide="share-2" class="w-4 h-4"></i>Referrals</button>
+  <button onclick="switchTab('lucky-draw')" class="tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all text-gray-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5" data-tab="lucky-draw"><i data-lucide="sparkles" class="w-4 h-4"></i>Lucky Draw</button>
+  <button onclick="switchTab('tournament')" class="tab-btn px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all text-gray-400 hover:text-white hover:bg-white/5 flex items-center gap-1.5" data-tab="tournament"><i data-lucide="calendar" class="w-4 h-4"></i>Tournament</button>
+</div>
+
+<!-- DASHBOARD TAB -->
+<div id="tab-dashboard" class="tab-content">
+  <div class="grid lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+      <div class="glass rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="font-display text-xl font-bold text-white">Upcoming Matches</h3>
+          <div class="flex gap-2">
+            <button class="px-3 py-1.5 rounded-lg bg-white/10 text-xs font-bold">Today</button>
+            <button class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:bg-white/5 transition-colors">Tomorrow</button>
+            <button class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:bg-white/5 transition-colors">Week</button>
+          </div>
+        </div>
+        <div class="space-y-3" id="upcomingMatchesContainer"></div>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="font-display text-xl font-bold text-white">Group Standings</h3>
+          <select id="groupSelect" onchange="renderStandings()" class="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-fifa-accent cursor-pointer">
+            <option value="A">Group A</option><option value="B">Group B</option><option value="C">Group C</option><option value="D">Group D</option>
+            <option value="E">Group E</option><option value="F">Group F</option><option value="G">Group G</option><option value="H">Group H</option>
+            <option value="I">Group I</option><option value="J">Group J</option><option value="K">Group K</option><option value="L">Group L</option>
+          </select>
+        </div>
+        <div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-gray-500 border-b border-white/10 text-xs uppercase tracking-wider"><th class="text-left py-3 px-2 font-bold">#</th><th class="text-left py-3 px-2 font-bold">Team</th><th class="text-center py-3 px-2 font-bold">P</th><th class="text-center py-3 px-2 font-bold">W</th><th class="text-center py-3 px-2 font-bold">D</th><th class="text-center py-3 px-2 font-bold">L</th><th class="text-center py-3 px-2 font-bold">GD</th><th class="text-center py-3 px-2 font-bold">Pts</th></tr></thead><tbody id="standingsTable"></tbody></table></div>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-display text-xl font-bold text-white mb-6">Knockout Bracket</h3>
+        <div class="grid grid-cols-4 gap-2 text-center">
+          <div class="space-y-2"><p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2">Round of 32</p><div class="p-2 rounded-lg bg-white/5 text-xs">Jun 28 - Jul 3</div><div class="p-2 rounded-lg bg-white/5 text-xs">16 matches</div></div>
+          <div class="space-y-2"><p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2">Round of 16</p><div class="p-2 rounded-lg bg-white/5 text-xs">Jul 4 - 7</div><div class="p-2 rounded-lg bg-white/5 text-xs">8 matches</div></div>
+          <div class="space-y-2"><p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2">Quarterfinals</p><div class="p-2 rounded-lg bg-white/5 text-xs">Jul 9 - 11</div><div class="p-2 rounded-lg bg-white/5 text-xs">4 matches</div></div>
+          <div class="space-y-2"><p class="text-xs text-fifa-gold font-bold uppercase tracking-wider mb-2">Final</p><div class="p-2 rounded-lg bg-fifa-gold/10 border border-fifa-gold/20 text-xs text-fifa-gold font-bold">Jul 19</div><div class="p-2 rounded-lg bg-white/5 text-xs">MetLife Stadium</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="space-y-6">
+      <div class="glass rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-5"><h3 class="font-display text-lg font-bold text-white">Daily Challenges</h3><span class="text-xs text-fifa-gold font-bold">Resets in 8h 42m</span></div>
+        <div class="space-y-4" id="dailyChallengesContainer"></div>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-display text-lg font-bold text-white mb-5">Recent Activity</h3>
+        <div class="space-y-3" id="recentActivityContainer"></div>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-display text-lg font-bold text-white mb-5">Social Tasks</h3>
+        <div class="space-y-3" id="socialTasksContainer"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HIGHLIGHTS TAB -->
+<div id="tab-highlights" class="tab-content hidden">
+  <div class="flex items-center justify-between mb-6">
+    <div><h3 class="font-display text-2xl font-bold text-white">Match Highlights</h3><p class="text-gray-400 text-sm mt-1">Watch highlights and earn <span class="text-fifa-gold font-bold">100 points</span> per video</p></div>
+    <div class="flex gap-2"><button class="px-4 py-2 rounded-xl bg-white/10 text-sm font-semibold">All</button><button class="px-4 py-2 rounded-xl text-sm font-medium text-gray-500 hover:bg-white/5 transition-colors">Goals</button><button class="px-4 py-2 rounded-xl text-sm font-medium text-gray-500 hover:bg-white/5 transition-colors">Saves</button><button class="px-4 py-2 rounded-xl text-sm font-medium text-gray-500 hover:bg-white/5 transition-colors">Best Moments</button></div>
+  </div>
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="highlightsContainer"></div>
+</div>
+
+<!-- PREDICTIONS TAB -->
+<div id="tab-predictions" class="tab-content hidden">
+  <div class="grid lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2">
+      <div class="glass rounded-2xl p-6 mb-6">
+        <div class="flex items-center justify-between mb-6">
+          <div><h3 class="font-display text-xl font-bold text-white">Make Your Predictions</h3><p class="text-gray-400 text-sm mt-1">Predict before kickoff. <span class="text-fifa-gold font-bold">+500 points</span> for correct predictions!</p></div>
+          <div class="px-3 py-1.5 rounded-full bg-green-500/15 border border-green-500/20 text-green-400 text-xs font-bold">3 Open Matches</div>
+        </div>
+        <div class="space-y-4" id="predictionsContainer"></div>
+      </div>
+    </div>
+    <div class="space-y-6">
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-display text-lg font-bold text-white mb-5">Your Stats</h3>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between p-3.5 rounded-xl bg-white/5"><span class="text-gray-400 text-sm">Total Predictions</span><span class="font-bold text-white">48</span></div>
+          <div class="flex items-center justify-between p-3.5 rounded-xl bg-white/5"><span class="text-gray-400 text-sm">Correct</span><span class="font-bold text-green-400">32</span></div>
+          <div class="flex items-center justify-between p-3.5 rounded-xl bg-white/5"><span class="text-gray-400 text-sm">Wrong</span><span class="font-bold text-red-400">16</span></div>
+          <div class="flex items-center justify-between p-3.5 rounded-xl bg-green-500/10 border border-green-500/20"><span class="text-green-400 text-sm font-medium">Win Rate</span><span class="font-bold text-green-400 text-2xl">68%</span></div>
+          <div class="flex items-center justify-between p-3.5 rounded-xl bg-fifa-gold/10 border border-fifa-gold/20"><span class="text-fifa-gold text-sm font-medium">Points Earned</span><span class="font-bold text-fifa-gold text-2xl">+12,400</span></div>
+        </div>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-display text-lg font-bold text-white mb-5">Prediction History</h3>
+        <div class="space-y-3 max-h-[500px] overflow-y-auto scrollbar-hide" id="predictionHistoryContainer"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REWARDS TAB -->
+<div id="tab-rewards" class="tab-content hidden">
+  <div class="mb-6">
+    <div class="glass rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-5">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-fifa-gold to-orange-500 flex items-center justify-center shadow-lg shadow-fifa-gold/20"><i data-lucide="wallet" class="w-8 h-8 text-black"></i></div>
+        <div><p class="text-gray-400 text-sm">Your Balance</p><p class="text-4xl font-bold text-fifa-gold" id="rewardBalance">2,450</p><p class="text-sm text-gray-500">points available for redemption</p></div>
+      </div>
+      <div class="text-center md:text-right">
+        <p class="text-gray-400 text-sm">Next Tier Unlock</p><p class="text-white font-semibold">Tier 2 Rewards</p>
+        <div class="flex items-center gap-2 mt-2"><div class="w-32 h-2 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-fifa-gold to-orange-500 progress-bar" style="width:49%"></div></div><span class="text-xs text-gray-500">2,550 more</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mb-8"><h3 class="font-display text-xl font-bold text-white mb-4 flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#CD7F32]"></span>Tier 1 Rewards <span class="text-xs text-gray-500 font-normal ml-2">1,000 - 2,500 pts</span></h3><div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="tier1Rewards"></div></div>
+  <div class="mb-8"><h3 class="font-display text-xl font-bold text-white mb-4 flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#C0C0C0]"></span>Tier 2 Rewards <span class="text-xs text-gray-500 font-normal ml-2">5,000 - 10,000 pts</span></h3><div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="tier2Rewards"></div></div>
+  <div class="mb-8"><h3 class="font-display text-xl font-bold text-white mb-4 flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#FFD700]"></span>Tier 3 Rewards <span class="text-xs text-gray-500 font-normal ml-2">15,000 - 100,000 pts</span></h3><div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="tier3Rewards"></div></div>
+</div>
+
+<!-- LEADERBOARD TAB -->
+<div id="tab-leaderboard" class="tab-content hidden">
+  <div class="glass rounded-2xl p-6">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+      <div><h3 class="font-display text-2xl font-bold text-white">Global Leaderboard</h3><p class="text-gray-400 text-sm mt-1">Compete with fans worldwide. Top 3 win exclusive prizes!</p></div>
+      <div class="flex gap-2"><button onclick="setLeaderboardPeriod('daily')" class="lb-period px-4 py-2 rounded-xl bg-white/10 text-sm font-semibold transition-all" data-period="daily">Daily</button><button onclick="setLeaderboardPeriod('weekly')" class="lb-period px-4 py-2 rounded-xl text-sm font-medium text-gray-500 hover:bg-white/5 transition-all" data-period="weekly">Weekly</button><button onclick="setLeaderboardPeriod('monthly')" class="lb-period px-4 py-2 rounded-xl text-sm font-medium text-gray-500 hover:bg-white/5 transition-all" data-period="monthly">Monthly</button><button onclick="setLeaderboardPeriod('alltime')" class="lb-period px-4 py-2 rounded-xl text-sm font-medium text-gray-500 hover:bg-white/5 transition-all" data-period="alltime">All-Time</button></div>
+    </div>
+    <div class="overflow-x-auto"><table class="w-full"><thead><tr class="text-gray-500 border-b border-white/10 text-xs uppercase tracking-wider"><th class="text-left py-4 px-4 font-bold">Rank</th><th class="text-left py-4 px-4 font-bold">User</th><th class="text-left py-4 px-4 font-bold">Country</th><th class="text-center py-4 px-4 font-bold">Points</th><th class="text-center py-4 px-4 font-bold">Tasks</th><th class="text-center py-4 px-4 font-bold">Win Rate</th></tr></thead><tbody id="leaderboardTable"></tbody></table></div>
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-fifa-blue/15 to-fifa-accent/10 border border-fifa-accent/20">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4"><span class="text-2xl font-bold text-fifa-accent">#142</span><div id="lbUserAvatar" class="w-11 h-11 rounded-full bg-gradient-to-br from-fifa-blue to-fifa-accent flex items-center justify-center text-sm font-bold">JD</div><div><p id="lbUserName" class="font-semibold text-white">John Doe</p><p class="text-sm text-gray-400 flex items-center gap-1"><span class="text-lg">&#127482;&#127480;</span> United States</p></div></div>
+        <div class="text-right"><p class="text-2xl font-bold text-fifa-gold">2,450</p><p class="text-sm text-gray-500">points</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REFERRALS TAB -->
+<div id="tab-referrals" class="tab-content hidden">
+  <div class="grid lg:grid-cols-2 gap-6">
+    <div class="glass rounded-2xl p-6">
+      <h3 class="font-display text-xl font-bold text-white mb-6">Your Referral Program</h3>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-fifa-blue/15 to-fifa-accent/10 border border-fifa-accent/20 mb-6">
+        <p class="text-gray-400 text-sm mb-3">Your Unique Referral Link</p>
+        <div class="flex gap-2"><input type="text" id="refLink" value="fifa2026.com/ref/JD2026X" readonly class="flex-1 px-4 py-3.5 rounded-xl bg-black/30 border border-white/10 text-white text-sm font-mono focus:outline-none"><button onclick="copyReferral()" class="px-5 py-3.5 rounded-xl bg-fifa-accent text-black font-bold text-sm hover:opacity-90 transition-opacity flex items-center gap-2"><i data-lucide="copy" class="w-4 h-4"></i>Copy</button></div>
+      </div>
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="text-center p-4 rounded-xl bg-white/5"><p class="text-2xl font-bold text-white" id="totalReferrals">24</p><p class="text-xs text-gray-500 mt-1 uppercase tracking-wider font-bold">Referrals</p></div>
+        <div class="text-center p-4 rounded-xl bg-white/5"><p class="text-2xl font-bold text-fifa-gold" id="referralPoints">2,400</p><p class="text-xs text-gray-500 mt-1 uppercase tracking-wider font-bold">Points</p></div>
+        <div class="text-center p-4 rounded-xl bg-white/5"><p class="text-2xl font-bold text-fifa-accent">#18</p><p class="text-xs text-gray-500 mt-1 uppercase tracking-wider font-bold">Rank</p></div>
+      </div>
+      <button onclick="shareReferral()" class="btn-primary w-full py-3.5 rounded-xl text-white font-bold text-sm tracking-wide flex items-center justify-center gap-2"><i data-lucide="share-2" class="w-5 h-5"></i>Share with Friends</button>
+    </div>
+    <div class="glass rounded-2xl p-6">
+      <h3 class="font-display text-xl font-bold text-white mb-6">How It Works</h3>
+      <div class="space-y-5">
+        <div class="flex gap-4"><div class="w-12 h-12 rounded-xl bg-fifa-blue/20 flex items-center justify-center flex-shrink-0"><span class="font-bold text-fifa-accent text-lg">1</span></div><div><p class="font-semibold text-white">Share Your Link</p><p class="text-sm text-gray-400 mt-0.5">Copy your unique referral link and share it with friends on social media, WhatsApp, or email.</p></div></div>
+        <div class="flex gap-4"><div class="w-12 h-12 rounded-xl bg-fifa-blue/20 flex items-center justify-center flex-shrink-0"><span class="font-bold text-fifa-accent text-lg">2</span></div><div><p class="font-semibold text-white">Friends Sign Up</p><p class="text-sm text-gray-400 mt-0.5">When they register and verify their email address, you get instant credit.</p></div></div>
+        <div class="flex gap-4"><div class="w-12 h-12 rounded-xl bg-fifa-blue/20 flex items-center justify-center flex-shrink-0"><span class="font-bold text-fifa-accent text-lg">3</span></div><div><p class="font-semibold text-white">Earn Points</p><p class="text-sm text-gray-400 mt-0.5">Get <span class="text-fifa-gold font-bold">100 points</span> for every verified referral. No limits!</p></div></div>
+      </div>
+      <div class="mt-6 p-4 rounded-xl bg-fifa-gold/10 border border-fifa-gold/20"><div class="flex items-center gap-3"><i data-lucide="info" class="w-5 h-5 text-fifa-gold flex-shrink-0"></i><p class="text-sm text-fifa-gold">Each verified referral earns you <strong>100 points</strong> instantly. Refer 10 friends for a bonus 500 points!</p></div></div>
+    </div>
+  </div>
+  <div class="glass rounded-2xl p-6 mt-6">
+    <h3 class="font-display text-xl font-bold text-white mb-6">Top Referrers</h3>
+    <div class="overflow-x-auto"><table class="w-full"><thead><tr class="text-gray-500 border-b border-white/10 text-xs uppercase tracking-wider"><th class="text-left py-3 px-4 font-bold">Rank</th><th class="text-left py-3 px-4 font-bold">User</th><th class="text-center py-3 px-4 font-bold">Referrals</th><th class="text-center py-3 px-4 font-bold">Points</th></tr></thead><tbody id="referralLeaderboardTable"></tbody></table></div>
+  </div>
+</div>
+
+<!-- LUCKY DRAW TAB -->
+<div id="tab-lucky-draw" class="tab-content hidden">
+  <div class="max-w-2xl mx-auto">
+    <div class="glass rounded-2xl p-8 text-center relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-fifa-gold/5 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 w-48 h-48 bg-fifa-accent/5 rounded-full blur-3xl"></div>
+      <div class="relative z-10">
+        <div class="mb-8">
+          <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-fifa-gold to-orange-500 flex items-center justify-center shadow-lg shadow-fifa-gold/20 animate-float"><i data-lucide="sparkles" class="w-10 h-10 text-black"></i></div>
+          <h3 class="font-display text-3xl font-bold text-white mb-2">Lucky Draw</h3>
+          <p class="text-gray-400">Spin the wheel for a chance to win amazing FIFA prizes!</p>
+        </div>
+        <div class="relative w-80 h-80 mx-auto mb-8">
+          <div class="absolute inset-0 rounded-full border-4 border-fifa-gold/20"></div>
+          <div class="absolute inset-3 rounded-full border-2 border-white/5"></div>
+          <div id="wheel" class="w-full h-full rounded-full relative spin-wheel shadow-2xl" style="background:conic-gradient(#FFD700 0deg 45deg,#FF6B6B 45deg 90deg,#4ECDC4 90deg 135deg,#FFD700 135deg 180deg,#95E1D3 180deg 225deg,#FFD700 225deg 270deg,#F38181 270deg 315deg,#AA96DA 315deg 360deg);">
+            <div class="absolute inset-0 flex items-center justify-center"><div class="w-5 h-5 bg-white rounded-full shadow-lg z-10"></div></div>
+            <div class="absolute top-3 left-1/2 -translate-x-1/2 text-[10px] font-black text-black tracking-wider">PS5</div>
+            <div class="absolute top-[18%] right-[12%] text-[10px] font-black text-white tracking-wider" style="transform:rotate(45deg)">100pts</div>
+            <div class="absolute top-1/2 right-3 -translate-y-1/2 text-[10px] font-black text-black tracking-wider" style="transform:rotate(90deg)">Jersey</div>
+            <div class="absolute bottom-[18%] right-[12%] text-[10px] font-black text-white tracking-wider" style="transform:rotate(135deg)">250pts</div>
+            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 text-[10px] font-black text-black tracking-wider">Boots</div>
+            <div class="absolute bottom-[18%] left-[12%] text-[10px] font-black text-white tracking-wider" style="transform:rotate(225deg)">500pts</div>
+            <div class="absolute top-1/2 left-3 -translate-y-1/2 text-[10px] font-black text-black tracking-wider" style="transform:rotate(270deg)">Xbox</div>
+            <div class="absolute top-[18%] left-[12%] text-[10px] font-black text-white tracking-wider" style="transform:rotate(315deg)">50pts</div>
+          </div>
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-20"><div class="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[16px] border-l-transparent border-r-transparent border-t-fifa-gold drop-shadow-lg"></div></div>
+        </div>
+        <div class="flex items-center justify-center gap-6 mb-8">
+          <div class="text-center p-4 rounded-xl bg-white/5 min-w-[100px]"><p class="text-3xl font-bold text-fifa-gold" id="drawEntries">5</p><p class="text-xs text-gray-500 uppercase tracking-wider font-bold mt-1">Entries</p></div>
+          <div class="w-px h-14 bg-white/10"></div>
+          <div class="text-center p-4 rounded-xl bg-white/5 min-w-[100px]"><p class="text-3xl font-bold text-white" id="drawSpins">0</p><p class="text-xs text-gray-500 uppercase tracking-wider font-bold mt-1">Spins</p></div>
+        </div>
+        <button onclick="spinWheel()" id="spinBtn" class="btn-gold px-10 py-4 rounded-xl text-black font-bold text-lg tracking-wide flex items-center gap-3 mx-auto"><i data-lucide="rotate-cw" class="w-6 h-6"></i>Spin Now (1 Entry)</button>
+        <p class="text-sm text-gray-500 mt-4">Complete daily tasks to earn more lucky draw entries!</p>
+      </div>
+    </div>
+    <div class="glass rounded-2xl p-6 mt-6">
+      <h3 class="font-display text-lg font-bold text-white mb-5">Recent Winners</h3>
+      <div class="space-y-3" id="drawWinnersContainer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOURNAMENT TAB -->
+<div id="tab-tournament" class="tab-content hidden">
+  <div class="grid lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-display text-xl font-bold text-white mb-5">Tournament Overview</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="p-4 rounded-xl bg-white/5 text-center"><p class="text-3xl font-bold text-fifa-accent">48</p><p class="text-xs text-gray-500 uppercase tracking-wider font-bold mt-1">Teams</p></div>
+          <div class="p-4 rounded-xl bg-white/5 text-center"><p class="text-3xl font-bold text-fifa-gold">104</p><p class="text-xs text-gray-500 uppercase tracking-wider font-bold mt-1">Matches</p></div>
+          <div class="p-4 rounded-xl bg-white/5 text-center"><p class="text-3xl font-bold text-white">16</p><p class="text-xs text-gray-500 uppercase tracking-wider font-bold mt-1">Venues</p></div>
+          <div class="p-4 rounded-xl bg-white/5 text-center"><p class="text-3xl font-bold text-green-400">39</p><p class="text-xs text-gray-500 uppercase tracking-wider font-bold mt-1">Days</p></div>
+        </div>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-display text-xl font-bold text-white mb-5">All Groups</h3>
+        <div class="grid md:grid-cols-2 gap-4" id="allGroupsContainer"></div>
+      </div>
+    </div>
+    <div class="space-y-6">
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-display text-lg font-bold text-white mb-4">Top Scorers</h3>
+        <div class="space-y-3" id="topScorersContainer"></div>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-display text-lg font-bold text-white mb-4">Key Dates</h3>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5"><div class="w-10 h-10 rounded-lg bg-fifa-gold/15 flex items-center justify-center flex-shrink-0"><span class="text-fifa-gold font-bold text-xs">JUN<br>11</span></div><div><p class="text-sm font-semibold text-white">Opening Match</p><p class="text-xs text-gray-400">Mexico vs South Africa</p></div></div>
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5"><div class="w-10 h-10 rounded-lg bg-fifa-accent/15 flex items-center justify-center flex-shrink-0"><span class="text-fifa-accent font-bold text-xs">JUN<br>12</span></div><div><p class="text-sm font-semibold text-white">USA Debut</p><p class="text-xs text-gray-400">USA vs Paraguay</p></div></div>
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5"><div class="w-10 h-10 rounded-lg bg-fifa-blue/15 flex items-center justify-center flex-shrink-0"><span class="text-fifa-blue font-bold text-xs">JUL<br>19</span></div><div><p class="text-sm font-semibold text-white">Final</p><p class="text-xs text-gray-400">MetLife Stadium, NJ</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div id="videoModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay">
+  <div class="glass-strong rounded-2xl max-w-4xl w-full mx-4 overflow-hidden shadow-2xl">
+    <div class="flex items-center justify-between p-4 border-b border-white/10">
+      <h3 id="videoTitle" class="font-semibold text-white">Match Highlight</h3>
+      <button onclick="closeVideoModal()" class="p-2 rounded-lg hover:bg-white/10 transition-colors"><i data-lucide="x" class="w-5 h-5 text-gray-400"></i></button>
+    </div>
+    <div class="aspect-video bg-black flex items-center justify-center relative">
+      <div id="videoPlayer" class="w-full h-full flex items-center justify-center">
+        <div class="text-center">
+          <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center cursor-pointer hover:bg-white/20 hover:scale-110 transition-all" onclick="playVideo()">
+            <i data-lucide="play" class="w-10 h-10 text-white ml-1"></i>
+          </div>
+          <p class="text-gray-400">Click to play highlight</p>
+        </div>
+      </div>
+      <div id="videoProgress" class="absolute bottom-0 left-0 right-0 h-1.5 bg-white/10">
+        <div class="h-full bg-gradient-to-r from-fifa-accent to-fifa-gold w-0 transition-all duration-[3000ms]" id="videoProgressBar"></div>
+      </div>
+    </div>
+    <div class="p-4 flex items-center justify-between">
+      <div class="flex items-center gap-2"><span class="text-fifa-gold font-bold text-lg">+100 pts</span><span class="text-gray-400 text-sm">for watching 80%+</span></div>
+      <div class="flex items-center gap-2 text-sm text-gray-400"><i data-lucide="clock" class="w-4 h-4"></i><span id="videoDuration">3:45</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="predictionModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay">
+  <div class="glass-strong rounded-2xl max-w-lg w-full mx-4 p-6 shadow-2xl">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-display text-xl font-bold text-white">Make Prediction</h3>
+      <button onclick="closePredictionModal()" class="p-2 rounded-lg hover:bg-white/10 transition-colors"><i data-lucide="x" class="w-5 h-5 text-gray-400"></i></button>
+    </div>
+    <div id="predictionForm">
+      <div class="flex items-center justify-between mb-8">
+        <div class="text-center flex-1">
+          <div class="w-20 h-20 rounded-2xl bg-white/10 flex items-center justify-center mb-3 mx-auto text-4xl shadow-lg" id="predHomeFlag"></div>
+          <p class="font-bold text-lg" id="predHomeTeam"></p>
+          <p class="text-xs text-gray-500 mt-1" id="predHomeGroup"></p>
+        </div>
+        <div class="px-6"><div class="text-3xl font-bold text-gray-600 font-display">VS</div></div>
+        <div class="text-center flex-1">
+          <div class="w-20 h-20 rounded-2xl bg-white/10 flex items-center justify-center mb-3 mx-auto text-4xl shadow-lg" id="predAwayFlag"></div>
+          <p class="font-bold text-lg" id="predAwayTeam"></p>
+          <p class="text-xs text-gray-500 mt-1" id="predAwayGroup"></p>
+        </div>
+      </div>
+      <div class="space-y-5">
+        <div>
+          <label class="text-sm text-gray-400 font-medium mb-2 block">Match Winner</label>
+          <div class="grid grid-cols-3 gap-3">
+            <button onclick="setWinner('home')" class="pred-winner py-3.5 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-white/10 transition-all" data-winner="home">Home Win</button>
+            <button onclick="setWinner('draw')" class="pred-winner py-3.5 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-white/10 transition-all" data-winner="draw">Draw</button>
+            <button onclick="setWinner('away')" class="pred-winner py-3.5 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-white/10 transition-all" data-winner="away">Away Win</button>
+          </div>
+        </div>
+        <div>
+          <label class="text-sm text-gray-400 font-medium mb-2 block">Exact Score</label>
+          <div class="flex items-center justify-center gap-6">
+            <div class="text-center">
+              <input type="number" id="predHomeScore" min="0" max="10" value="0" class="w-24 h-16 px-4 rounded-2xl input-field text-white text-center text-3xl font-bold focus:border-fifa-accent">
+              <p class="text-xs text-gray-500 mt-2" id="predHomeLabel"></p>
+            </div>
+            <span class="text-3xl font-bold text-gray-600 font-display">-</span>
+            <div class="text-center">
+              <input type="number" id="predAwayScore" min="0" max="10" value="0" class="w-24 h-16 px-4 rounded-2xl input-field text-white text-center text-3xl font-bold focus:border-fifa-accent">
+              <p class="text-xs text-gray-500 mt-2" id="predAwayLabel"></p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="text-sm text-gray-400 font-medium mb-2 block">Total Goals</label>
+          <input type="range" min="0" max="10" value="2" class="w-full accent-fifa-accent h-2 rounded-full bg-white/10" oninput="document.getElementById('totalGoalsVal').textContent = this.value">
+          <div class="flex justify-between text-sm text-gray-500 mt-2 font-medium"><span>0</span><span id="totalGoalsVal" class="text-fifa-accent font-bold text-lg">2</span><span>10</span></div>
+        </div>
+      </div>
+      <button onclick="submitPrediction()" class="btn-primary w-full mt-8 py-4 rounded-xl text-white font-bold text-sm tracking-wide">Submit Prediction (+500 pts if correct)</button>
+    </div>
+  </div>
+</div>
+
+<div id="redeemModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay">
+  <div class="glass-strong rounded-2xl max-w-md w-full mx-4 p-6 shadow-2xl">
+    <div class="text-center mb-6">
+      <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-fifa-gold to-orange-500 flex items-center justify-center shadow-lg shadow-fifa-gold/20"><i data-lucide="gift" class="w-10 h-10 text-black"></i></div>
+      <h3 class="font-display text-2xl font-bold text-white mb-1">Redeem Reward</h3>
+      <p class="text-gray-400" id="redeemItemName">FIFA Official Football</p>
+    </div>
+    <div class="p-5 rounded-2xl bg-white/5 mb-6 space-y-3">
+      <div class="flex items-center justify-between"><span class="text-gray-400 text-sm">Cost</span><span class="font-bold text-fifa-gold text-lg" id="redeemCost">1,000 points</span></div>
+      <div class="border-t border-white/5"></div>
+      <div class="flex items-center justify-between"><span class="text-gray-400 text-sm">Your Balance</span><span class="font-bold text-white text-lg" id="redeemBalance">2,450 points</span></div>
+      <div class="border-t border-white/5"></div>
+      <div class="flex items-center justify-between"><span class="text-gray-400 text-sm">After Redemption</span><span class="font-bold text-gray-300 text-lg" id="redeemAfter">1,450 points</span></div>
+    </div>
+    <div class="flex gap-3">
+      <button onclick="closeRedeemModal()" class="flex-1 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white font-semibold hover:bg-white/10 transition-all text-sm">Cancel</button>
+      <button onclick="confirmRedeem()" class="flex-1 btn-gold py-3.5 rounded-xl text-black font-bold text-sm">Confirm Redemption</button>
+    </div>
+  </div>
+</div>
+
+<div id="notificationsPanel" class="fixed top-16 right-4 z-50 w-80 glass-strong rounded-2xl p-4 border border-white/10 shadow-2xl hidden">
+  <div class="flex items-center justify-between mb-4"><h4 class="font-semibold text-white">Notifications</h4><button onclick="hideNotifications()" class="p-1 rounded hover:bg-white/10"><i data-lucide="x" class="w-4 h-4 text-gray-400"></i></button></div>
+  <div class="space-y-3 max-h-80 overflow-y-auto scrollbar-hide" id="notificationsList">
+    <div class="p-3 rounded-xl bg-white/5 flex gap-3"><div class="w-8 h-8 rounded-lg bg-green-500/15 flex items-center justify-center flex-shrink-0"><i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i></div><div><p class="text-sm">Your prediction was correct! +500 pts</p><p class="text-xs text-gray-500 mt-0.5">2 hours ago</p></div></div>
+    <div class="p-3 rounded-xl bg-white/5 flex gap-3"><div class="w-8 h-8 rounded-lg bg-fifa-gold/15 flex items-center justify-center flex-shrink-0"><i data-lucide="gift" class="w-4 h-4 text-fifa-gold"></i></div><div><p class="text-sm">Daily reward claimed! +50 pts</p><p class="text-xs text-gray-500 mt-0.5">Yesterday</p></div></div>
+    <div class="p-3 rounded-xl bg-white/5 flex gap-3"><div class="w-8 h-8 rounded-lg bg-fifa-accent/15 flex items-center justify-center flex-shrink-0"><i data-lucide="user-plus" class="w-4 h-4 text-fifa-accent"></i></div><div><p class="text-sm">Sarah joined via your referral! +100 pts</p><p class="text-xs text-gray-500 mt-0.5">2 days ago</p></div></div>
+  </div>
+</div>
+
+<div id="toastContainer" class="fixed top-24 right-4 z-50 space-y-2 max-w-sm"></div>
+
+<!-- Bottom Navigation (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 glass border-t border-white/10">
+  <div class="flex justify-around py-1">
+    <button onclick="switchTab('dashboard')" class="flex flex-col items-center gap-0.5 p-2 text-fifa-accent min-w-[60px]"><i data-lucide="layout-dashboard" class="w-5 h-5"></i><span class="text-[10px] font-medium">Home</span></button>
+    <button onclick="switchTab('highlights')" class="flex flex-col items-center gap-0.5 p-2 text-gray-500 min-w-[60px]"><i data-lucide="play" class="w-5 h-5"></i><span class="text-[10px] font-medium">Watch</span></button>
+    <button onclick="switchTab('predictions')" class="flex flex-col items-center gap-0.5 p-2 text-gray-500 min-w-[60px]"><i data-lucide="target" class="w-5 h-5"></i><span class="text-[10px] font-medium">Predict</span></button>
+    <button onclick="switchTab('rewards')" class="flex flex-col items-center gap-0.5 p-2 text-gray-500 min-w-[60px]"><i data-lucide="gift" class="w-5 h-5"></i><span class="text-[10px] font-medium">Rewards</span></button>
+    <button onclick="switchTab('leaderboard')" class="flex flex-col items-center gap-0.5 p-2 text-gray-500 min-w-[60px]"><i data-lucide="trophy" class="w-5 h-5"></i><span class="text-[10px] font-medium">Rank</span></button>
+  </div>
+</nav>
+
+</div>
+
+<script>
+// ==================== STATE ====================
+let currentUser=null,userPoints=2450,userStreak=5,dailyClaimed=false,currentTab='dashboard',selectedWinner=null,currentPredictionMatch=null,currentRedeemItem=null,wheelSpinning=false,drawEntries=5,videoWatched=false,notificationsOpen=false,liveMatchInterval=null;
+
+// ==================== REAL FIFA 2026 DATA ====================
+const teamData={
+  'Mexico':{flag:'&#127474;&#127485;',color:'#006847',group:'A'},'South Africa':{flag:'&#127487;&#127462;',color:'#007749',group:'A'},'South Korea':{flag:'&#127472;&#127479;',color:'#0047A0',group:'A'},'Czechia':{flag:'&#127464;&#127487;',color:'#D7141A',group:'A'},
+  'Canada':{flag:'&#127464;&#127462;',color:'#FF0000',group:'B'},'Bosnia and Herzegovina':{flag:'&#127463;&#127466;',color:'#002395',group:'B'},'Qatar':{flag:'&#127478;&#127466;',color:'#8D1B3D',group:'B'},'Switzerland':{flag:'&#127464;&#127469;',color:'#DA020E',group:'B'},
+  'Brazil':{flag:'&#127463;&#127479;',color:'#009C3B',group:'C'},'Morocco':{flag:'&#127474;&#127462;',color:'#C1272D',group:'C'},'Haiti':{flag:'&#127469;&#127481;',color:'#00209F',group:'C'},'Scotland':{flag:'&#127988;&#917607;&#917602;&#917605;&#917614;&#917607;&#917631;',color:'#005EB8',group:'C'},
+  'United States':{flag:'&#127482;&#127480;',color:'#B22234',group:'D'},'Paraguay':{flag:'&#127477;&#127486;',color:'#D52B1E',group:'D'},'Australia':{flag:'&#127462;&#127482;',color:'#012169',group:'D'},'Turkey':{flag:'&#127481;&#127479;',color:'#E30A17',group:'D'},
+  'Germany':{flag:'&#127465;&#127466;',color:'#000000',group:'E'},'Curacao':{flag:'&#127464;&#127484;',color:'#002B7F',group:'E'},'Ivory Coast':{flag:'&#127464;&#127485;',color:'#FF8200',group:'E'},'Ecuador':{flag:'&#127466;&#127464;',color:'#FFD100',group:'E'},
+  'Netherlands':{flag:'&#127475;&#127473;',color:'#FF4F00',group:'F'},'Japan':{flag:'&#127471;&#127477;',color:'#BC002D',group:'F'},'Sweden':{flag:'&#127480;&#127466;',color:'#006AA7',group:'F'},'Tunisia':{flag:'&#127481;&#127475;',color:'#E70013',group:'F'},
+  'Belgium':{flag:'&#127463;&#127466;',color:'#000000',group:'G'},'Egypt':{flag:'&#127466;&#127468;',color:'#C8102E',group:'G'},'Iran':{flag:'&#127470;&#127479;',color:'#239F40',group:'G'},'New Zealand':{flag:'&#127475;&#127487;',color:'#012169',group:'G'},
+  'Spain':{flag:'&#127466;&#127480;',color:'#AA151B',group:'H'},'Cape Verde':{flag:'&#127464;&#127483;',color:'#003893',group:'H'},'Saudi Arabia':{flag:'&#127480;&#127462;',color:'#006C35',group:'H'},'Uruguay':{flag:'&#127482;&#127486;',color:'#0038A8',group:'H'},
+  'France':{flag:'&#127467;&#127479;',color:'#0055A4',group:'I'},'Senegal':{flag:'&#127480;&#127475;',color:'#00853F',group:'I'},'Iraq':{flag:'&#127470;&#127478;',color:'#CE1126',group:'I'},'Norway':{flag:'&#127475;&#127476;',color:'#EF2B2D',group:'I'},
+  'Argentina':{flag:'&#127462;&#127479;',color:'#6BAFCE',group:'J'},'Algeria':{flag:'&#127465;&#127487;',color:'#006233',group:'J'},'Austria':{flag:'&#127462;&#127481;',color:'#ED2939',group:'J'},'Jordan':{flag:'&#127471;&#127476;',color:'#007A3D',group:'J'},
+  'Portugal':{flag:'&#127477;&#127481;',color:'#006600',group:'K'},'DR Congo':{flag:'&#127464;&#127465;',color:'#007FFF',group:'K'},'Uzbekistan':{flag:'&#127482;&#127474;',color:'#1EB53A',group:'K'},'Colombia':{flag:'&#127464;&#127476;',color:'#FCD116',group:'K'},
+  'England':{flag:'&#127988;&#917607;&#917602;&#917619;&#917603;&#917623;&#917612;&#917603;&#917622;&#917612;&#917603;&#917620;',color:'#CF081F',group:'L'},'Croatia':{flag:'&#127469;&#127479;',color:'#171796',group:'L'},'Ghana':{flag:'&#127468;&#127469;',color:'#006B3F',group:'L'},'Panama':{flag:'&#127477;&#127462;',color:'#DA020E',group:'L'}
+};
+
+const groups={
+  'A':['Mexico','South Africa','South Korea','Czechia'],'B':['Canada','Bosnia and Herzegovina','Qatar','Switzerland'],
+  'C':['Brazil','Morocco','Haiti','Scotland'],'D':['United States','Paraguay','Australia','Turkey'],
+  'E':['Germany','Curacao','Ivory Coast','Ecuador'],'F':['Netherlands','Japan','Sweden','Tunisia'],
+  'G':['Belgium','Egypt','Iran','New Zealand'],'H':['Spain','Cape Verde','Saudi Arabia','Uruguay'],
+  'I':['France','Senegal','Iraq','Norway'],'J':['Argentina','Algeria','Austria','Jordan'],
+  'K':['Portugal','DR Congo','Uzbekistan','Colombia'],'L':['England','Croatia','Ghana','Panama']
+};
+
+const allMatches=[
+  {id:1,home:'Mexico',away:'South Africa',date:'Jun 11',time:'3:00 PM ET',venue:'Estadio Azteca, Mexico City',group:'A',status:'upcoming'},
+  {id:2,home:'South Korea',away:'Czechia',date:'Jun 11',time:'10:00 PM ET',venue:'Estadio Akron, Guadalajara',group:'A',status:'upcoming'},
+  {id:3,home:'Canada',away:'Bosnia and Herzegovina',date:'Jun 12',time:'3:00 PM ET',venue:'BMO Field, Toronto',group:'B',status:'upcoming'},
+  {id:4,home:'United States',away:'Paraguay',date:'Jun 12',time:'9:00 PM ET',venue:'SoFi Stadium, Los Angeles',group:'D',status:'upcoming'},
+  {id:5,home:'Qatar',away:'Switzerland',date:'Jun 13',time:'3:00 PM ET',venue:'Levi's Stadium, Santa Clara',group:'B',status:'upcoming'},
+  {id:6,home:'Brazil',away:'Morocco',date:'Jun 13',time:'6:00 PM ET',venue:'MetLife Stadium, East Rutherford',group:'C',status:'upcoming'},
+  {id:7,home:'Haiti',away:'Scotland',date:'Jun 13',time:'9:00 PM ET',venue:'Gillette Stadium, Foxborough',group:'C',status:'upcoming'},
+  {id:8,home:'Australia',away:'Turkey',date:'Jun 13',time:'12:00 AM ET',venue:'BC Place, Vancouver',group:'D',status:'upcoming'},
+  {id:9,home:'Germany',away:'Curacao',date:'Jun 14',time:'1:00 PM ET',venue:'NRG Stadium, Houston',group:'E',status:'upcoming'},
+  {id:10,home:'Netherlands',away:'Japan',date:'Jun 14',time:'4:00 PM ET',venue:'AT&T Stadium, Arlington',group:'F',status:'upcoming'},
+  {id:11,home:'Ivory Coast',away:'Ecuador',date:'Jun 14',time:'7:00 PM ET',venue:'Lincoln Financial Field, Philadelphia',group:'E',status:'upcoming'},
+  {id:12,home:'Sweden',away:'Tunisia',date:'Jun 14',time:'10:00 PM ET',venue:'Estadio BBVA, Monterrey',group:'F',status:'upcoming'},
+  {id:13,home:'Spain',away:'Cape Verde',date:'Jun 15',time:'1:00 PM ET',venue:'Mercedes-Benz Stadium, Atlanta',group:'H',status:'upcoming'},
+  {id:14,home:'Belgium',away:'Egypt',date:'Jun 15',time:'3:00 PM ET',venue:'Lumen Field, Seattle',group:'G',status:'upcoming'},
+  {id:15,home:'Saudi Arabia',away:'Uruguay',date:'Jun 15',time:'6:00 PM ET',venue:'Hard Rock Stadium, Miami',group:'H',status:'upcoming'},
+  {id:16,home:'Iran',away:'New Zealand',date:'Jun 15',time:'9:00 PM ET',venue:'SoFi Stadium, Los Angeles',group:'G',status:'upcoming'},
+  {id:17,home:'France',away:'Senegal',date:'Jun 16',time:'3:00 PM ET',venue:'MetLife Stadium, East Rutherford',group:'I',status:'upcoming'},
+  {id:18,home:'Iraq',away:'Norway',date:'Jun 16',time:'6:00 PM ET',venue:'Gillette Stadium, Foxborough',group:'I',status:'upcoming'},
+  {id:19,home:'Argentina',away:'Algeria',date:'Jun 16',time:'9:00 PM ET',venue:'Arrowhead Stadium, Kansas City',group:'J',status:'upcoming'},
+  {id:20,home:'Austria',away:'Jordan',date:'Jun 16',time:'12:00 AM ET',venue:'Levi's Stadium, Santa Clara',group:'J',status:'upcoming'}
+];
+
+const liveMatches=[
+  {id:101,home:'Argentina',away:'Brazil',homeScore:2,awayScore:1,time:"78'",status:'live',possession:{home:55,away:45},shots:{home:12,away:8},corners:{home:5,away:3},venue:'MetLife Stadium'},
+  {id:102,home:'France',away:'Germany',homeScore:0,awayScore:0,time:"34'",status:'live',possession:{home:48,away:52},shots:{home:4,away:6},corners:{home:2,away:3},venue:'AT&T Stadium'}
+];
+
+const highlights=[
+  {id:1,title:'Mexico vs South Africa - Opening Match Highlights',duration:'12:30',date:'Coming Jun 11',type:'Match Highlights',watched:false,thumbnail:'from-amber-700 to-green-900'},
+  {id:2,title:'USA vs Paraguay - Full Match Recap',duration:'15:45',date:'Coming Jun 12',type:'Match Recaps',watched:false,thumbnail:'from-blue-700 to-red-900'},
+  {id:3,title:'Brazil vs Morocco - Best Goals',duration:'8:20',date:'Coming Jun 13',type:'Goal Highlights',watched:false,thumbnail:'from-green-700 to-yellow-900'},
+  {id:4,title:'Netherlands vs Japan - Match Highlights',duration:'11:15',date:'Coming Jun 14',type:'Match Highlights',watched:false,thumbnail:'from-orange-700 to-blue-900'},
+  {id:5,title:'Spain vs Cape Verde - Top Saves',duration:'5:30',date:'Coming Jun 15',type:'Top Saves',watched:false,thumbnail:'from-red-700 to-yellow-900'},
+  {id:6,title:'Argentina vs Algeria - Full Match',duration:'14:00',date:'Coming Jun 16',type:'Match Recaps',watched:false,thumbnail:'from-sky-700 to-white'}
+];
+
+const predictions=[
+  {id:1,home:'Mexico',away:'South Africa',date:'Jun 11, 3:00 PM ET',group:'A',status:'open'},
+  {id:2,home:'Canada',away:'Bosnia and Herzegovina',date:'Jun 12, 3:00 PM ET',group:'B',status:'open'},
+  {id:3,home:'United States',away:'Paraguay',date:'Jun 12, 9:00 PM ET',group:'D',status:'open'},
+  {id:4,home:'Brazil',away:'Morocco',date:'Jun 13, 6:00 PM ET',group:'C',status:'open'}
+];
+
+const predictionHistory=[
+  {match:'Argentina vs Algeria',prediction:'2-1',result:'2-1',correct:true,points:500,date:'Simulated'},
+  {match:'France vs Senegal',prediction:'1-0',result:'0-0',correct:false,points:0,date:'Simulated'},
+  {match:'Spain vs Cape Verde',prediction:'3-0',result:'3-0',correct:true,points:500,date:'Simulated'},
+  {match:'Germany vs Curacao',prediction:'4-0',result:'3-1',correct:false,points:0,date:'Simulated'},
+  {match:'Brazil vs Morocco',prediction:'2-1',result:'2-1',correct:true,points:500,date:'Simulated'}
+];
+
+const rewards={
+  tier1:[
+    {id:1,name:'FIFA Official Football',cost:1000,icon:'circle',color:'from-amber-600 to-amber-800',desc:'Official FIFA World Cup 2026 match ball'},
+    {id:2,name:'Adidas Jersey',cost:2000,icon:'shirt',color:'from-blue-600 to-blue-800',desc:'Official team jersey of your choice'},
+    {id:3,name:'Adidas Football Boots',cost:1500,icon:'footprints',color:'from-green-600 to-green-800',desc:'Professional grade football boots'},
+    {id:4,name:'$20 Gift Card',cost:2500,icon:'credit-card',color:'from-purple-600 to-purple-800',desc:'FIFA Store gift card'}
+  ],
+  tier2:[
+    {id:5,name:'FIFA Collector Jersey',cost:5000,icon:'star',color:'from-red-600 to-red-800',desc:'Limited edition signed jersey'},
+    {id:6,name:'AirPods Pro',cost:7500,icon:'headphones',color:'from-gray-400 to-gray-600',desc:'Apple AirPods Pro 2nd gen'},
+    {id:7,name:'Smart Watch',cost:8000,icon:'watch',color:'from-cyan-600 to-cyan-800',desc:'FIFA branded smart watch'},
+    {id:8,name:'PlayStation 5',cost:10000,icon:'gamepad-2',color:'from-indigo-600 to-indigo-800',desc:'Sony PS5 with FIFA 26 bundle'}
+  ],
+  tier3:[
+    {id:9,name:'Xbox Series X',cost:15000,icon:'gamepad',color:'from-green-500 to-green-700',desc:'Microsoft Xbox Series X bundle'},
+    {id:10,name:'Gaming Laptop',cost:25000,icon:'laptop',color:'from-pink-600 to-pink-800',desc:'High-performance gaming laptop'},
+    {id:11,name:'VIP Match Experience',cost:50000,icon:'crown',color:'from-fifa-gold to-orange-600',desc:'VIP hospitality at any group match'},
+    {id:12,name:'World Cup Final Ticket',cost:100000,icon:'ticket',color:'from-fifa-gold to-yellow-600',desc:'2 tickets to the Final at MetLife Stadium'}
+  ]
+};
+
+const leaderboardData=[
+  {rank:1,name:'Alex Chen',country:'&#127482;&#127480; United States',points:45230,tasks:156,winRate:'82%'},
+  {rank:2,name:'Maria Silva',country:'&#127463;&#127479; Brazil',points:41890,tasks:142,winRate:'79%'},
+  {rank:3,name:'James Wilson',country:'&#127988;&#917607;&#917602;&#917619;&#917603;&#917623;&#917612;&#917603;&#917622;&#917612;&#917603;&#917620; England',points:38920,tasks:138,winRate:'76%'},
+  {rank:4,name:'Yuki Tanaka',country:'&#127471;&#127477; Japan',points:35400,tasks:125,winRate:'74%'},
+  {rank:5,name:'Ahmed Hassan',country:'&#127466;&#127468; Egypt',points:32150,tasks:118,winRate:'71%'},
+  {rank:6,name:'Sophie Dubois',country:'&#127467;&#127479; France',points:29800,tasks:110,winRate:'69%'},
+  {rank:7,name:'Lukas Mueller',country:'&#127465;&#127466; Germany',points:27500,tasks:102,winRate:'67%'},
+  {rank:8,name:'Carlos Rodriguez',country:'&#127462;&#127479; Argentina',points:25100,tasks:95,winRate:'65%'}
+];
+
+const referralLeaders=[
+  {rank:1,name:'Alex Chen',referrals:156,points:15600},
+  {rank:2,name:'Maria Silva',referrals:142,points:14200},
+  {rank:3,name:'James Wilson',referrals:138,points:13800},
+  {rank:4,name:'Yuki Tanaka',referrals:125,points:12500},
+  {rank:5,name:'Ahmed Hassan',referrals:118,points:11800}
+];
+
+const dailyChallenges=[
+  {id:1,title:'Watch 3 Highlights',progress:1,total:3,points:150,icon:'play'},
+  {id:2,title:'Make 2 Predictions',progress:0,total:2,points:200,icon:'target'},
+  {id:3,title:'Share on Social Media',progress:0,total:1,points:100,icon:'share-2'},
+  {id:4,title:'Invite 1 Friend',progress:0,total:1,points:300,icon:'user-plus'}
+];
+
+const socialTasks=[
+  {id:1,platform:'YouTube',action:'Subscribe to FIFA Channel',points:200,completed:false,icon:'youtube'},
+  {id:2,platform:'Facebook',action:'Follow FIFA Page',points:100,completed:true,icon:'facebook'},
+  {id:3,platform:'X (Twitter)',action:'Follow @FIFAcom',points:100,completed:false,icon:'twitter'},
+  {id:4,platform:'Instagram',action:'Follow @fifaworldcup',points:100,completed:true,icon:'instagram'},
+  {id:5,platform:'Telegram',action:'Join FIFA Channel',points:150,completed:false,icon:'send'},
+  {id:6,platform:'WhatsApp',action:'Join FIFA Community',points:150,completed:false,icon:'message-circle'}
+];
+
+const recentActivity=[
+  {action:'Watched Argentina vs Algeria Highlights',points:100,time:'2 hours ago',icon:'play'},
+  {action:'Correct Prediction: Argentina 2-1 Algeria',points:500,time:'Yesterday',icon:'target'},
+  {action:'Daily Login Bonus claimed',points:50,time:'Yesterday',icon:'log-in'},
+  {action:'Referral: Sarah joined via your link',points:100,time:'2 days ago',icon:'user-plus'},
+  {action:'Completed Challenge: Watch 3 Highlights',points:150,time:'2 days ago',icon:'check-circle'}
+];
+
+const drawWinners=[
+  {name:'Alex Chen',prize:'PS5',time:'5 minutes ago'},
+  {name:'Maria Silva',prize:'100 Points',time:'12 minutes ago'},
+  {name:'James Wilson',prize:'FIFA Jersey',time:'25 minutes ago'},
+  {name:'Yuki Tanaka',prize:'250 Points',time:'1 hour ago'},
+  {name:'Ahmed Hassan',prize:'Adidas Boots',time:'2 hours ago'}
+];
+
+const topScorers=[
+  {name:'Kylian Mbappe',country:'&#127467;&#127479;',goals:4,matches:2},
+  {name:'Lionel Messi',country:'&#127462;&#127479;',goals:3,matches:2},
+  {name:'Erling Haaland',country:'&#127475;&#127476;',goals:3,matches:2},
+  {name:'Vinicius Jr',country:'&#127463;&#127479;',goals:2,matches:1},
+  {name:'Jude Bellingham',country:'&#127988;&#917607;&#917602;&#917619;&#917603;&#917623;&#917612;&#917603;&#917622;&#917612;&#917603;&#917620;',goals:2,matches:1}
+];
+
+// ==================== AUTH FUNCTIONS ====================
+function toggleAuthMode(){
+  document.getElementById('authLoginForm').classList.toggle('hidden');
+  document.getElementById('authRegisterForm').classList.toggle('hidden');
+  document.getElementById('authForgotForm').classList.add('hidden');
+  document.getElementById('authOtpForm').classList.add('hidden');
+  lucide.createIcons();
+}
+function showForgotPassword(){
+  document.getElementById('authLoginForm').classList.add('hidden');
+  document.getElementById('authForgotForm').classList.remove('hidden');
+  lucide.createIcons();
+}
+function showLoginForm(){
+  document.getElementById('authForgotForm').classList.add('hidden');
+  document.getElementById('authOtpForm').classList.add('hidden');
+  document.getElementById('authRegisterForm').classList.add('hidden');
+  document.getElementById('authLoginForm').classList.remove('hidden');
+  lucide.createIcons();
+}
+function sendResetLink(){
+  const email=document.getElementById('forgotEmail').value;
+  if(!email||!email.includes('@')){showToast('Please enter a valid email address','error');return;}
+  showToast('Reset link sent! Check your email.','success');
+  setTimeout(showLoginForm,2000);
+}
+function moveOtp(el,index){
+  el.value=el.value.replace(/[^0-9]/g,'');
+  if(el.value&&index<5)document.querySelectorAll('.otp-input')[index+1].focus();
+}
+function moveOtpBack(e,index){
+  if(e.key==='Backspace'&&!e.target.value&&index>0)document.querySelectorAll('.otp-input')[index-1].focus();
+}
+function verifyOtp(){
+  const otp=Array.from(document.querySelectorAll('.otp-input')).map(i=>i.value).join('');
+  if(otp.length!==6){showToast('Please enter all 6 digits','error');return;}
+  showToast('Email verified successfully!','success');
+  setTimeout(()=>{
+    document.getElementById('authModal').classList.add('hidden');
+    document.getElementById('mainApp').classList.remove('hidden');
+    initApp();
+    confetti({particleCount:100,spread:70,origin:{y:0.6}});
+  },1000);
+}
+function resendOtp(){showToast('New OTP sent to your email','info');}
+function login(){
+  const email=document.getElementById('loginEmail').value;
+  const password=document.getElementById('loginPassword').value;
+  if(!email||!password){showToast('Please enter email and password','error');return;}
+  currentUser={name:'John Doe',email:email};
+  document.getElementById('authModal').classList.add('hidden');
+  document.getElementById('mainApp').classList.remove('hidden');
+  initApp();
+  showToast('Welcome back, John!','success');
+}
+function register(){
+  const name=document.getElementById('regName').value;
+  const email=document.getElementById('regEmail').value;
+  const password=document.getElementById('regPassword').value;
+  const confirm=document.getElementById('regConfirm').value;
+  const terms=document.getElementById('regTerms').checked;
+  if(!name||!email||!password){showToast('Please fill in all fields','error');return;}
+  if(password.length<8){showToast('Password must be at least 8 characters','error');return;}
+  if(password!==confirm){showToast('Passwords do not match','error');return;}
+  if(!terms){showToast('Please accept the Terms of Service','error');return;}
+  currentUser={name:name,email:email};
+  document.getElementById('authRegisterForm').classList.add('hidden');
+  document.getElementById('authOtpForm').classList.remove('hidden');
+  lucide.createIcons();
+  showToast('Check your email for verification code','info');
+}
+function socialLogin(provider){
+  const names={google:'John Doe',apple:'Jane Smith',facebook:'Mike Johnson'};
+  currentUser={name:names[provider]||'User',email:'user@'+provider+'.com'};
+  document.getElementById('authModal').classList.add('hidden');
+  document.getElementById('mainApp').classList.remove('hidden');
+  initApp();
+  showToast('Logged in with '+provider.charAt(0).toUpperCase()+provider.slice(1)+'!','success');
+}
+function guestLogin(){
+  currentUser={name:'Guest User',email:null};
+  document.getElementById('authModal').classList.add('hidden');
+  document.getElementById('mainApp').classList.remove('hidden');
+  initApp();
+  showToast('Welcome, Guest! Sign up to save progress.','info');
+}
+function logout(){
+  currentUser=null;
+  document.getElementById('mainApp').classList.add('hidden');
+  document.getElementById('authModal').classList.remove('hidden');
+  document.getElementById('profileDropdown').classList.add('hidden');
+  showLoginForm();
+  showToast('Signed out successfully','info');
+}
+
+// ==================== APP INIT ====================
+function initApp(){
+  lucide.createIcons();
+  renderLiveMatches();
+  renderDailyRewards();
+  renderUpcomingMatches();
+  renderStandings();
+  renderDailyChallenges();
+  renderRecentActivity();
+  renderSocialTasks();
+  renderHighlights();
+  renderPredictions();
+  renderPredictionHistory();
+  renderRewards();
+  renderLeaderboard();
+  renderReferralLeaderboard();
+  renderDrawWinners();
+  renderAllGroups();
+  renderTopScorers();
+  if(currentUser){
+    document.getElementById('userName').textContent=currentUser.name;
+    document.getElementById('profileName').textContent=currentUser.name;
+    document.getElementById('profileEmail').textContent=currentUser.email||'Guest Account';
+    document.getElementById('lbUserName').textContent=currentUser.name;
+    const initials=currentUser.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+    document.getElementById('userAvatar').textContent=initials;
+    document.getElementById('lbUserAvatar').textContent=initials;
+  }
+  liveMatchInterval=setInterval(updateLiveMatches,30000);
+}
+function updateLiveMatches(){
+  liveMatches.forEach(match=>{
+    const timeNum=parseInt(match.time);
+    if(timeNum<90){
+      match.time=(timeNum+1)+"'";
+      if(Math.random()<0.08){
+        if(Math.random()<0.5)match.homeScore++;else match.awayScore++;
+        showToast('GOAL! '+match.home+' '+match.homeScore+' - '+match.awayScore+' '+match.away,'info');
+      }
+    }
+  });
+  renderLiveMatches();
+}
+
+// ==================== RENDER FUNCTIONS ====================
+function renderLiveMatches(){
+  const container=document.getElementById('liveMatchesContainer');
+  container.innerHTML=liveMatches.map(match=>`
+    <div class="glass rounded-2xl p-5 match-live match-card-live card-hover cursor-pointer" onclick="openMatchDetail(${match.id})">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-500 live-indicator"></span>
+          <span class="text-red-400 text-xs font-bold tracking-wider uppercase">Live</span>
+          <span class="text-gray-500 text-xs font-mono">${match.time}</span>
+        </div>
+        <span class="text-[10px] text-gray-600 uppercase tracking-wider font-bold">${match.venue}</span>
+      </div>
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
+          <span class="text-4xl">${teamData[match.home].flag}</span>
+          <span class="font-bold text-lg">${match.home}</span>
+        </div>
+        <div class="text-4xl font-bold font-display tracking-tight">
+          <span class="text-white ${match.homeScore>match.awayScore?'text-fifa-gold':''}">${match.homeScore}</span>
+          <span class="text-gray-600 mx-3">-</span>
+          <span class="text-white ${match.awayScore>match.homeScore?'text-fifa-gold':''}">${match.awayScore}</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="font-bold text-lg">${match.away}</span>
+          <span class="text-4xl">${teamData[match.away].flag}</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-2 text-center text-xs">
+        <div class="p-2.5 rounded-xl bg-white/5">
+          <p class="font-bold text-white text-sm">${match.possession.home}%</p>
+          <p class="text-gray-500 mt-0.5">Possession</p>
+        </div>
+        <div class="p-2.5 rounded-xl bg-white/5">
+          <p class="font-bold text-white text-sm">${match.shots.home} - ${match.shots.away}</p>
+          <p class="text-gray-500 mt-0.5">Shots</p>
+        </div>
+        <div class="p-2.5 rounded-xl bg-white/5">
+          <p class="font-bold text-white text-sm">${match.corners.home} - ${match.corners.away}</p>
+          <p class="text-gray-500 mt-0.5">Corners</p>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+function renderDailyRewards(){
+  const container=document.getElementById('dailyRewardsContainer');
+  const days=[
+    {day:1,points:50,claimed:true},{day:2,points:50,claimed:true},{day:3,points:50,claimed:true},{day:4,points:50,claimed:true},
+    {day:5,points:50,claimed:false,current:true},{day:6,points:100,claimed:false},{day:7,points:500,claimed:false,bonus:true},
+    {day:14,points:1000,claimed:false,bonus:true},{day:21,points:1500,claimed:false,bonus:true},{day:30,points:3000,claimed:false,bonus:true}
+  ];
+  container.innerHTML=days.map(d=>`
+    <div class="flex-shrink-0 w-[72px] text-center ${d.claimed?'opacity-40':d.current?'':'opacity-60'}">
+      <div class="w-14 h-14 mx-auto rounded-2xl ${d.claimed?'bg-green-500/15 border-green-500/25':d.current?'bg-fifa-gold/15 border-fifa-gold/40 animate-pulse-glow':d.bonus?'bg-fifa-accent/10 border-fifa-accent/20':'bg-white/5 border-white/10'} border-2 flex flex-col items-center justify-center mb-2 transition-all">
+        ${d.claimed?'<i data-lucide="check" class="w-5 h-5 text-green-400"></i>':`<span class="font-bold ${d.current?'text-fifa-gold':d.bonus?'text-fifa-accent':'text-white'} text-sm">${d.points>=1000?(d.points/1000)+'K':d.points}</span>`}
+      </div>
+      <p class="text-[10px] ${d.current?'text-fifa-gold font-bold':d.bonus?'text-fifa-accent font-semibold':'text-gray-500'}">Day ${d.day}</p>
+      ${d.bonus?'<p class="text-[9px] text-fifa-gold font-bold">BONUS</p>':''}
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+function renderUpcomingMatches(){
+  const container=document.getElementById('upcomingMatchesContainer');
+  const upcoming=allMatches.slice(0,6);
+  container.innerHTML=upcoming.map(m=>`
+    <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer group">
+      <div class="flex items-center gap-3 flex-1 min-w-0">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">${teamData[m.home].flag}</span>
+          <span class="font-semibold text-sm truncate">${m.home}</span>
+        </div>
+        <span class="text-gray-600 text-xs font-bold">VS</span>
+        <div class="flex items-center gap-2">
+          <span class="font-semibold text-sm truncate">${m.away}</span>
+          <span class="text-2xl">${teamData[m.away].flag}</span>
+        </div>
+      </div>
+      <div class="text-right flex-shrink-0 ml-4">
+        <p class="text-xs text-gray-400 font-medium">${m.date}, ${m.time}</p>
+        <p class="text-[10px] text-gray-600">${m.venue}</p>
+      </div>
+      <button onclick="event.stopPropagation();openPredictionModal('${m.home}','${m.away}')" class="ml-3 px-3 py-1.5 rounded-lg bg-fifa-blue/20 text-fifa-accent text-xs font-bold hover:bg-fifa-blue/30 transition-all flex-shrink-0">Predict</button>
+    </div>
+  `).join('');
+}
+function renderStandings(){
+  const selectedGroup=document.getElementById('groupSelect')?.value||'A';
+  const container=document.getElementById('standingsTable');
+  const groupTeams=groups[selectedGroup];
+  const standings=groupTeams.map((team,i)=>({
+    pos:i+1,team:team,played:Math.floor(Math.random()*3),won:Math.floor(Math.random()*3),drawn:Math.floor(Math.random()*2),lost:Math.floor(Math.random()*2),gd:Math.floor(Math.random()*6)-3,points:Math.floor(Math.random()*9)
+  })).sort((a,b)=>b.points-a.points);
+  standings.forEach((s,i)=>s.pos=i+1);
+  container.innerHTML=standings.map(s=>`
+    <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+      <td class="py-3 px-2 font-bold ${s.pos<=2?'text-fifa-gold':'text-gray-500'} text-sm">${s.pos}</td>
+      <td class="py-3 px-2"><div class="flex items-center gap-2.5"><span class="text-xl">${teamData[s.team].flag}</span><span class="font-medium text-sm">${s.team}</span></div></td>
+      <td class="py-3 px-2 text-center text-gray-500 text-sm">${s.played}</td>
+      <td class="py-3 px-2 text-center text-green-400 text-sm font-semibold">${s.won}</td>
+      <td class="py-3 px-2 text-center text-yellow-500/70 text-sm">${s.drawn}</td>
+      <td class="py-3 px-2 text-center text-red-400/70 text-sm">${s.lost}</td>
+      <td class="py-3 px-2 text-center ${s.gd>0?'text-green-400':s.gd<0?'text-red-400':'text-gray-500'} text-sm font-semibold">${s.gd>0?'+':''}${s.gd}</td>
+      <td class="py-3 px-2 text-center font-bold text-fifa-gold text-sm">${s.points}</td>
+    </tr>
+  `).join('');
+}
+function renderDailyChallenges(){
+  const container=document.getElementById('dailyChallengesContainer');
+  container.innerHTML=dailyChallenges.map(c=>{
+    const pct=(c.progress/c.total)*100;
+    return `
+      <div class="p-4 rounded-xl bg-white/5 hover:bg-white/[0.07] transition-all cursor-pointer" onclick="completeChallenge(${c.id})">
+        <div class="flex items-center justify-between mb-2.5">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-fifa-blue/15 flex items-center justify-center"><i data-lucide="${c.icon}" class="w-4 h-4 text-fifa-accent"></i></div>
+            <span class="font-medium text-sm">${c.title}</span>
+          </div>
+          <span class="text-fifa-gold font-bold text-sm">+${c.points}</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex-1 h-2 rounded-full bg-white/5 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-fifa-blue to-fifa-accent progress-bar" style="width:${pct}%"></div></div>
+          <span class="text-xs text-gray-500 font-medium">${c.progress}/${c.total}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+  lucide.createIcons();
+}
+function completeChallenge(id){
+  const challenge=dailyChallenges.find(c=>c.id===id);
+  if(challenge.progress<challenge.total){
+    challenge.progress++;
+    if(challenge.progress>=challenge.total){
+      userPoints+=challenge.points;
+      updateUserPoints();
+      showToast('Challenge complete! +'+challenge.points+' points','success');
+      confetti({particleCount:50,spread:60,origin:{y:0.7}});
+    }
+    renderDailyChallenges();
+  }
+}
+function renderRecentActivity(){
+  const container=document.getElementById('recentActivityContainer');
+  container.innerHTML=recentActivity.map(a=>`
+    <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/[0.07] transition-all">
+      <div class="w-9 h-9 rounded-lg bg-fifa-blue/15 flex items-center justify-center flex-shrink-0"><i data-lucide="${a.icon}" class="w-4 h-4 text-fifa-accent"></i></div>
+      <div class="flex-1 min-w-0"><p class="text-sm truncate">${a.action}</p><p class="text-xs text-gray-600 mt-0.5">${a.time}</p></div>
+      <span class="text-fifa-gold font-bold text-sm flex-shrink-0">+${a.points}</span>
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+function renderSocialTasks(){
+  const container=document.getElementById('socialTasksContainer');
+  container.innerHTML=socialTasks.map(t=>`
+    <div class="flex items-center justify-between p-3 rounded-xl ${t.completed?'bg-green-500/8 border border-green-500/15':'bg-white/5 hover:bg-white/[0.07]'} cursor-pointer transition-all" onclick="completeSocialTask(${t.id})">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg ${t.completed?'bg-green-500/15':'bg-fifa-blue/15'} flex items-center justify-center"><i data-lucide="${t.icon}" class="w-4 h-4 ${t.completed?'text-green-400':'text-fifa-accent'}"></i></div>
+        <div><p class="text-sm font-medium">${t.platform}</p><p class="text-xs text-gray-500">${t.action}</p></div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-fifa-gold font-bold text-sm">+${t.points}</span>
+        ${t.completed?'<i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>':'<i data-lucide="chevron-right" class="w-4 h-4 text-gray-600"></i>'}
+      </div>
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+function completeSocialTask(id){
+  const task=socialTasks.find(t=>t.id===id);
+  if(task.completed){showToast('Task already completed!','info');return;}
+  task.completed=true;
+  userPoints+=task.points;
+  updateUserPoints();
+  showToast('+'+task.points+' points! '+task.platform+' task completed','success');
+  renderSocialTasks();
+}
+function renderHighlights(){
+  const container=document.getElementById('highlightsContainer');
+  container.innerHTML=highlights.map(h=>`
+    <div class="highlight-card rounded-2xl overflow-hidden cursor-pointer card-hover group" onclick="openVideoModal('${h.title}','${h.duration}')">
+      <div class="aspect-video bg-gradient-to-br ${h.thumbnail} flex items-center justify-center relative">
+        <div class="w-16 h-16 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center group-hover:scale-110 transition-transform z-10 border border-white/20">
+          <i data-lucide="play" class="w-7 h-7 text-white ml-1"></i>
+        </div>
+        <div class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-sm text-xs font-bold z-10">${h.duration}</div>
+        ${h.watched?'<div class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-green-500/60 backdrop-blur-sm text-xs font-bold z-10 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>Watched</div>':''}
+      </div>
+      <div class="p-4 relative z-10">
+        <span class="text-[11px] text-fifa-accent font-bold uppercase tracking-wider">${h.type}</span>
+        <h4 class="font-semibold text-white mt-1 mb-2 text-sm leading-snug">${h.title}</h4>
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-gray-500">${h.date}</span>
+          <span class="text-fifa-gold font-bold">+100 pts</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+function renderPredictions(){
+  const container=document.getElementById('predictionsContainer');
+  container.innerHTML=predictions.map(p=>`
+    <div class="p-5 rounded-xl bg-white/5 hover:bg-white/[0.07] transition-all">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-4">
+          <div class="text-center">
+            <span class="text-3xl">${teamData[p.home].flag}</span>
+            <p class="font-bold text-sm mt-1">${p.home}</p>
+          </div>
+          <div class="text-center px-2">
+            <p class="text-xs text-gray-600 font-bold">VS</p>
+            <p class="text-[10px] text-gray-600 mt-0.5">${p.group}</p>
+          </div>
+          <div class="text-center">
+            <span class="text-3xl">${teamData[p.away].flag}</span>
+            <p class="font-bold text-sm mt-1">${p.away}</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-xs text-gray-500">${p.date}</p>
+          <span class="inline-block px-2.5 py-1 rounded-full bg-green-500/15 text-green-400 text-[10px] font-bold mt-1.5 border border-green-500/20">OPEN</span>
+        </div>
+      </div>
+      <button onclick="openPredictionModal('${p.home}','${p.away}')" class="btn-primary w-full py-3 rounded-xl text-white font-bold text-sm tracking-wide">Make Prediction (+500 pts)</button>
+    </div>
+  `).join('');
+}
+function renderPredictionHistory(){
+  const container=document.getElementById('predictionHistoryContainer');
+  container.innerHTML=predictionHistory.map(p=>`
+    <div class="p-3.5 rounded-xl ${p.correct?'prediction-correct':'prediction-wrong'}">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-sm font-semibold">${p.match}</span>
+        <span class="text-xs font-bold ${p.correct?'text-green-400':'text-red-400'}">${p.correct?'+'+p.points:'0'} pts</span>
+      </div>
+      <div class="flex items-center justify-between text-xs text-gray-500">
+        <span>Your pick: <span class="text-gray-300 font-medium">${p.prediction}</span></span>
+        <span>Result: <span class="text-gray-300 font-medium">${p.result}</span></span>
+      </div>
+    </div>
+  `).join('');
+}
+function renderRewards(){
+  const renderTier=(tier,containerId)=>{
+    const container=document.getElementById(containerId);
+    container.innerHTML=tier.map(r=>`
+      <div class="reward-card tier-${r.id<=4?'1':r.id<=8?'2':'3'} rounded-2xl p-5 card-hover group">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${r.color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform">
+          <i data-lucide="${r.icon}" class="w-7 h-7 text-white"></i>
+        </div>
+        <h4 class="font-bold text-white mb-1 text-sm">${r.name}</h4>
+        <p class="text-xs text-gray-500 mb-4 leading-relaxed">${r.desc}</p>
+        <div class="flex items-center gap-2 mb-4">
+          <i data-lucide="zap" class="w-4 h-4 text-fifa-gold"></i>
+          <span class="text-fifa-gold font-bold">${r.cost.toLocaleString()}</span>
+          <span class="text-gray-600 text-xs">pts</span>
+        </div>
+        <button onclick="openRedeemModal(${r.id},'${r.name}',${r.cost})" class="w-full py-2.5 rounded-xl text-sm font-bold transition-all ${userPoints>=r.cost?'btn-gold text-black':'bg-white/5 text-gray-500 cursor-not-allowed'}" ${userPoints<r.cost?'disabled':''}>
+          ${userPoints>=r.cost?'Redeem Now':'Need '+(r.cost-userPoints).toLocaleString()+' more'}
+        </button>
+      </div>
+    `).join('');
+  };
+  renderTier(rewards.tier1,'tier1Rewards');
+  renderTier(rewards.tier2,'tier2Rewards');
+  renderTier(rewards.tier3,'tier3Rewards');
+  lucide.createIcons();
+}
+function renderLeaderboard(){
+  const container=document.getElementById('leaderboardTable');
+  container.innerHTML=leaderboardData.map(u=>`
+    <tr class="leaderboard-row border-b border-white/5 hover:bg-white/5 transition-colors">
+      <td class="py-4 px-4">
+        <span class="w-8 h-8 rounded-full ${u.rank===1?'bg-fifa-gold/15 text-fifa-gold':u.rank===2?'bg-gray-400/15 text-gray-400':u.rank===3?'bg-orange-600/15 text-orange-400':'bg-white/5 text-gray-500'} flex items-center justify-center font-bold text-sm inline-flex">${u.rank}</span>
+      </td>
+      <td class="py-4 px-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-fifa-blue to-fifa-accent flex items-center justify-center text-sm font-bold shadow-lg">${u.name.split(' ').map(n=>n[0]).join('')}</div>
+          <span class="font-semibold text-sm">${u.name}</span>
+        </div>
+      </td>
+      <td class="py-4 px-4 text-sm text-gray-400">${u.country}</td>
+      <td class="py-4 px-4 text-center font-bold text-fifa-gold">${u.points.toLocaleString()}</td>
+      <td class="py-4 px-4 text-center text-gray-500 text-sm">${u.tasks}</td>
+      <td class="py-4 px-4 text-center text-green-400 text-sm font-semibold">${u.winRate}</td>
+    </tr>
+  `).join('');
+}
+function renderReferralLeaderboard(){
+  const container=document.getElementById('referralLeaderboardTable');
+  container.innerHTML=referralLeaders.map(u=>`
+    <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+      <td class="py-3 px-4"><span class="font-bold ${u.rank<=3?'text-fifa-gold':'text-gray-500'} text-sm">#${u.rank}</span></td>
+      <td class="py-3 px-4 font-medium text-sm">${u.name}</td>
+      <td class="py-3 px-4 text-center text-fifa-accent font-bold text-sm">${u.referrals}</td>
+      <td class="py-3 px-4 text-center text-fifa-gold font-bold text-sm">${u.points.toLocaleString()}</td>
+    </tr>
+  `).join('');
+}
+function renderDrawWinners(){
+  const container=document.getElementById('drawWinnersContainer');
+  container.innerHTML=drawWinners.map(w=>`
+    <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/[0.07] transition-all">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-fifa-gold/15 flex items-center justify-center"><i data-lucide="trophy" class="w-4 h-4 text-fifa-gold"></i></div>
+        <div><p class="text-sm font-medium">${w.name}</p><p class="text-xs text-gray-600">${w.time}</p></div>
+      </div>
+      <span class="text-fifa-gold font-bold text-sm">${w.prize}</span>
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+function renderAllGroups(){
+  const container=document.getElementById('allGroupsContainer');
+  container.innerHTML=Object.entries(groups).map(([letter,teams])=>`
+    <div class="p-4 rounded-xl bg-white/5">
+      <div class="flex items-center justify-between mb-3"><span class="text-xs text-gray-500 font-bold uppercase tracking-wider">Group ${letter}</span><span class="text-[10px] text-gray-600">4 teams</span></div>
+      <div class="space-y-2">${teams.map(t=>`<div class="flex items-center gap-2"><span class="text-lg">${teamData[t].flag}</span><span class="text-sm font-medium">${t}</span></div>`).join('')}</div>
+    </div>
+  `).join('');
+}
+function renderTopScorers(){
+  const container=document.getElementById('topScorersContainer');
+  container.innerHTML=topScorers.map((s,i)=>`
+    <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/[0.07] transition-all">
+      <span class="w-7 h-7 rounded-full ${i===0?'bg-fifa-gold/20 text-fifa-gold':i===1?'bg-gray-400/20 text-gray-400':i===2?'bg-orange-600/20 text-orange-400':'bg-white/5 text-gray-500'} flex items-center justify-center font-bold text-xs flex-shrink-0">${i+1}</span>
+      <span class="text-xl">${s.country}</span>
+      <div class="flex-1 min-w-0"><p class="text-sm font-semibold truncate">${s.name}</p><p class="text-xs text-gray-500">${s.matches} matches</p></div>
+      <span class="text-fifa-gold font-bold text-lg">${s.goals}</span>
+    </div>
+  `).join('');
+}
+
+// ==================== TAB SWITCHING ====================
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.add('hidden'));
+  const target=document.getElementById('tab-'+tab);
+  if(target)target.classList.remove('hidden');
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    if(btn.dataset.tab===tab){btn.classList.add('tab-active');btn.classList.remove('text-gray-400','hover:text-white','hover:bg-white/5');}
+    else{btn.classList.remove('tab-active');btn.classList.add('text-gray-400','hover:text-white','hover:bg-white/5');}
+  });
+  document.querySelectorAll('nav.md\:hidden button').forEach(btn=>{
+    if(btn.getAttribute('onclick')?.includes(tab)){btn.classList.add('text-fifa-accent');btn.classList.remove('text-gray-500');}
+    else{btn.classList.remove('text-fifa-accent');btn.classList.add('text-gray-500');}
+  });
+  lucide.createIcons();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ==================== DAILY REWARD ====================
+function claimDailyReward(){
+  if(dailyClaimed){showToast('You already claimed today's reward!','error');return;}
+  dailyClaimed=true;
+  userPoints+=50;
+  userStreak++;
+  updateUserPoints();
+  document.getElementById('claimDailyBtn').textContent='Claimed!';
+  document.getElementById('claimDailyBtn').disabled=true;
+  document.getElementById('claimDailyBtn').classList.add('opacity-50','cursor-not-allowed');
+  showToast('+50 points! Daily reward claimed!','success');
+  confetti({particleCount:80,spread:70,origin:{y:0.7},colors:['#FFD700','#00D4FF','#0047AB']});
+  renderDailyRewards();
+}
+
+// ==================== VIDEO MODAL ====================
+function openVideoModal(title,duration){
+  document.getElementById('videoTitle').textContent=title;
+  document.getElementById('videoDuration').textContent=duration;
+  document.getElementById('videoModal').classList.remove('hidden');
+  document.getElementById('videoModal').classList.add('flex');
+  videoWatched=false;
+  document.getElementById('videoProgressBar').style.width='0%';
+}
+function closeVideoModal(){
+  document.getElementById('videoModal').classList.add('hidden');
+  document.getElementById('videoModal').classList.remove('flex');
+}
+function playVideo(){
+  const progressBar=document.getElementById('videoProgressBar');
+  progressBar.style.width='100%';
+  setTimeout(()=>{
+    if(!videoWatched){
+      videoWatched=true;
+      userPoints+=100;
+      updateUserPoints();
+      showToast('+100 points! Highlight watched!','success');
+      confetti({particleCount:40,spread:50,origin:{y:0.7},colors:['#FFD700','#00D4FF']});
+    }
+  },3000);
+}
+
+// ==================== PREDICTION MODAL ====================
+function openPredictionModal(home,away){
+  currentPredictionMatch={home,away};
+  document.getElementById('predHomeFlag').innerHTML=teamData[home].flag;
+  document.getElementById('predHomeTeam').textContent=home;
+  document.getElementById('predHomeGroup').textContent='Group '+teamData[home].group;
+  document.getElementById('predHomeLabel').textContent=home;
+  document.getElementById('predAwayFlag').innerHTML=teamData[away].flag;
+  document.getElementById('predAwayTeam').textContent=away;
+  document.getElementById('predAwayGroup').textContent='Group '+teamData[away].group;
+  document.getElementById('predAwayLabel').textContent=away;
+  document.getElementById('predictionModal').classList.remove('hidden');
+  document.getElementById('predictionModal').classList.add('flex');
+  selectedWinner=null;
+  document.querySelectorAll('.pred-winner').forEach(btn=>{
+    btn.classList.remove('bg-fifa-accent','text-black','border-fifa-accent');
+    btn.classList.add('bg-white/5','border-white/10');
+  });
+}
+function closePredictionModal(){
+  document.getElementById('predictionModal').classList.add('hidden');
+  document.getElementById('predictionModal').classList.remove('flex');
+}
+function setWinner(winner){
+  selectedWinner=winner;
+  document.querySelectorAll('.pred-winner').forEach(btn=>{
+    if(btn.dataset.winner===winner){btn.classList.remove('bg-white/5','border-white/10');btn.classList.add('bg-fifa-accent','text-black','border-fifa-accent');}
+    else{btn.classList.remove('bg-fifa-accent','text-black','border-fifa-accent');btn.classList.add('bg-white/5','border-white/10');}
+  });
+}
+function submitPrediction(){
+  if(!selectedWinner){showToast('Please select a match winner!','error');return;}
+  const homeScore=document.getElementById('predHomeScore').value;
+  const awayScore=document.getElementById('predAwayScore').value;
+  closePredictionModal();
+  showToast('Prediction submitted! Good luck!','success');
+  setTimeout(()=>{
+    const won=Math.random()>0.3;
+    if(won){userPoints+=500;updateUserPoints();showToast('Your prediction was correct! +500 points!','success');confetti({particleCount:120,spread:80,origin:{y:0.6},colors:['#FFD700','#00D4FF','#0047AB']});
+    }else{showToast('Your prediction was incorrect. Better luck next time!','info');}
+  },5000);
+}
+
+// ==================== REDEEM MODAL ====================
+function openRedeemModal(id,name,cost){
+  currentRedeemItem={id,name,cost};
+  document.getElementById('redeemItemName').textContent=name;
+  document.getElementById('redeemCost').textContent=cost.toLocaleString()+' points';
+  document.getElementById('redeemBalance').textContent=userPoints.toLocaleString()+' points';
+  document.getElementById('redeemAfter').textContent=(userPoints-cost).toLocaleString()+' points';
+  document.getElementById('redeemModal').classList.remove('hidden');
+  document.getElementById('redeemModal').classList.add('flex');
+}
+function closeRedeemModal(){
+  document.getElementById('redeemModal').classList.add('hidden');
+  document.getElementById('redeemModal').classList.remove('flex');
+}
+function confirmRedeem(){
+  if(userPoints>=currentRedeemItem.cost){
+    userPoints-=currentRedeemItem.cost;
+    updateUserPoints();
+    closeRedeemModal();
+    showToast('Successfully redeemed: '+currentRedeemItem.name+'!','success');
+    confetti({particleCount:150,spread:90,origin:{y:0.6},colors:['#FFD700','#FFA500','#00D4FF']});
+    renderRewards();
+  }
+}
+
+// ==================== REFERRAL FUNCTIONS ====================
+function copyReferral(){
+  const link=document.getElementById('refLink').value;
+  navigator.clipboard.writeText(link).then(()=>{showToast('Referral link copied!','success');}).catch(()=>{
+    const temp=document.createElement('textarea');temp.value=link;document.body.appendChild(temp);temp.select();document.execCommand('copy');document.body.removeChild(temp);showToast('Referral link copied!','success');
+  });
+}
+function shareReferral(){
+  const shareData={title:'Join FIFA 2026 Rewards Hub',text:'Watch, predict, and earn rewards with me on FIFA World Cup 2026!',url:'https://fifa2026.com/ref/JD2026X'};
+  if(navigator.share){navigator.share(shareData);}else{copyReferral();}
+}
+
+// ==================== LUCKY DRAW ====================
+function spinWheel(){
+  if(wheelSpinning)return;
+  if(drawEntries<=0){showToast('No entries left! Complete tasks to earn more.','error');return;}
+  wheelSpinning=true;
+  drawEntries--;
+  document.getElementById('drawEntries').textContent=drawEntries;
+  document.getElementById('spinBtn').disabled=true;
+  document.getElementById('spinBtn').classList.add('opacity-50','cursor-not-allowed');
+  const wheel=document.getElementById('wheel');
+  const spins=5+Math.random()*3;
+  const degrees=spins*360+Math.random()*360;
+  wheel.style.transform='rotate('+degrees+'deg)';
+  setTimeout(()=>{
+    wheelSpinning=false;
+    document.getElementById('spinBtn').disabled=false;
+    document.getElementById('spinBtn').classList.remove('opacity-50','cursor-not-allowed');
+    const prizes=['PS5','100 Points','FIFA Jersey','250 Points','Adidas Boots','500 Points','Xbox','50 Points'];
+    const prize=prizes[Math.floor(Math.random()*prizes.length)];
+    if(prize.includes('Points')){const pts=parseInt(prize);userPoints+=pts;updateUserPoints();}
+    showToast('You won: '+prize+'!','success');
+    confetti({particleCount:100,spread:70,origin:{y:0.6},colors:['#FFD700','#FF6B6B','#4ECDC4']});
+    document.getElementById('drawSpins').textContent=parseInt(document.getElementById('drawSpins').textContent)+1;
+  },4000);
+}
+
+// ==================== LEADERBOARD PERIOD ====================
+function setLeaderboardPeriod(period){
+  document.querySelectorAll('.lb-period').forEach(btn=>{
+    if(btn.dataset.period===period){btn.classList.add('bg-white/10','text-white');btn.classList.remove('text-gray-500');}
+    else{btn.classList.remove('bg-white/10','text-white');btn.classList.add('text-gray-500');}
+  });
+  showToast('Showing '+period+' leaderboard','info');
+}
+
+// ==================== NOTIFICATIONS ====================
+function showNotifications(){
+  const panel=document.getElementById('notificationsPanel');
+  notificationsOpen=!notificationsOpen;
+  if(notificationsOpen){panel.classList.remove('hidden');document.getElementById('notifBadge').classList.add('hidden');}
+  else{panel.classList.add('hidden');}
+  lucide.createIcons();
+}
+function hideNotifications(){
+  document.getElementById('notificationsPanel').classList.add('hidden');
+  notificationsOpen=false;
+}
+
+// ==================== PROFILE ====================
+function toggleProfileMenu(){
+  document.getElementById('profileDropdown').classList.toggle('hidden');
+}
+function showProfileSettings(){
+  showToast('Profile settings coming soon!','info');
+  document.getElementById('profileDropdown').classList.add('hidden');
+}
+function showRedemptionHistory(){
+  showToast('Redemption history coming soon!','info');
+  document.getElementById('profileDropdown').classList.add('hidden');
+}
+
+// ==================== UTILITY ====================
+function updateUserPoints(){
+  document.getElementById('userPoints').textContent=userPoints.toLocaleString();
+  document.getElementById('mobilePoints').textContent=userPoints.toLocaleString()+' pts';
+  document.getElementById('rewardBalance').textContent=userPoints.toLocaleString();
+  renderRewards();
+}
+function showToast(message,type='info'){
+  const container=document.getElementById('toastContainer');
+  const toast=document.createElement('div');
+  const colors={success:'bg-green-500/15 border-green-500/25 text-green-400',error:'bg-red-500/15 border-red-500/25 text-red-400',info:'bg-fifa-blue/15 border-fifa-accent/25 text-fifa-accent'};
+  const icons={success:'check-circle',error:'x-circle',info:'info'};
+  toast.className='notification-toast glass px-5 py-3.5 rounded-xl border '+colors[type]+' flex items-center gap-3 min-w-[320px] shadow-xl';
+  toast.innerHTML='<i data-lucide="'+icons[type]+'" class="w-5 h-5 flex-shrink-0"></i><span class="text-sm font-medium">'+message+'</span>';
+  container.appendChild(toast);
+  lucide.createIcons();
+  setTimeout(()=>{toast.style.opacity='0';toast.style.transform='translateX(120%)';setTimeout(()=>toast.remove(),300);},4000);
+}
+function scrollToSection(id){
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+}
+function openMatchDetail(id){
+  showToast('Match details & live timeline coming soon!','info');
+}
+
+// Close dropdowns on outside click
+document.addEventListener('click',(e)=>{
+  const profileBtn=document.getElementById('profileBtn');
+  const dropdown=document.getElementById('profileDropdown');
+  if(profileBtn&&dropdown&&!profileBtn.contains(e.target)&&!dropdown.contains(e.target)){dropdown.classList.add('hidden');}
+});
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded',()=>{
+  lucide.createIcons();
+});
+</script>
+</body>
+</html>
